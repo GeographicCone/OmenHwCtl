@@ -8,7 +8,7 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-10'
+$MyVersion = '2023-08-11'
 
 # Set-OmenBiosWmi()
 # Makes a WMI call to set BIOS data:
@@ -79,7 +79,7 @@ $Args | ForEach-Object -Process {
         }
         '-MaxGpuPower' {
             Write-Information 'Set Maximum GPU Power'
-            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x00, 0x01, 0x00) -Size 128 | Show-OmenHwCtlResult
+            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x00) -Size 128 | Show-OmenHwCtlResult
         }
         '-MinGpuPower' {
             Write-Information 'Set Minimum GPU Power'
