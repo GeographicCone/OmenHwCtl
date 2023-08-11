@@ -67,8 +67,10 @@ Function Show-OmenHwCtlResult {
 }
 
 # Iterate through arguments and perform operations accordingly
-$Args | ForEach-Object -Process {
-    Switch($_) { 
+$NextArg = 0
+ForEach($Arg in $Args) {
+    $NextArg++
+    Switch($Arg) { 
         '-MaxFanSpeedOff' {
             Write-Information 'Set Maximum Fan Speed Off'
             Set-OmenBiosWmi -CommandType 0x27 -Data 0x00 | Show-OmenHwCtlResult
@@ -85,11 +87,21 @@ $Args | ForEach-Object -Process {
             Write-Information 'Set Minimum GPU Power'
             Set-OmenBiosWmi -CommandType 0x22 -Data @(0x00, 0x00, 0x01, 0x00) | Show-OmenHwCtlResult
         }
+        '-SetConcurrentCpuPower' {
+            $Value = [byte] $Args[$NextArg]
+            Write-Information $('Set Concurrent CPU Power Limit to: ' + $Value + 'W')
+            Set-OmenBiosWmi -CommandType 0x29 -Data @(0xFF, 0xFF, 0xFF, $Value) | Show-OmenHwCtlResult
+        }
+        '-SetCpuPower' {
+            $Value = [byte] $Args[$NextArg]
+            Write-Information $('Set CPU Power Limit to: ' + $Value + 'W')
+            Set-OmenBiosWmi -CommandType 0x29 -Data @($Value, $Value, 0xFF, 0xFF) | Show-OmenHwCtlResult
+        }
     } 
 }
 
 # If not a single operation was attempted, display usage prompt
 if(!$OperationAttempted) {
     Write-Host 'Omen Hardware Control Script - Version' $MyVersion
-    Write-Host 'Usage:' $MyInvocation.MyCommand.Name '[-MaxFanSpeedOff|-MaxFanSpeedOn] [-MaxGpuPower|-MinGpuPower] [-Silent]'
+    Write-Host 'Usage:' $MyInvocation.MyCommand.Name`r`n' [-MaxFanSpeedOff|-MaxFanSpeedOn]'`r`n' [-MaxGpuPower|-MinGpuPower]' `r`n '[-SetConcurrentCpuPower <0-255>] [-SetCpuPower <0-255>]'`r`n' [-Silent]'
 }
