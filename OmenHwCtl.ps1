@@ -30,8 +30,8 @@ Function Set-OmenBiosWmi {
          # Pre-defined shared secret for authorization (observed: 83, 69, 67, 85)
          [ValidateNotNullOrEmpty()] [Byte[]] $Sign = @(0x53, 0x45, 0x43, 0x55),
 
-         # Method choice depends on the amount of data to be written
-         [ValidateSet('0', '4', '128', '1024', '4096')] [String] $Size = '128'
+         # Method choice depends on the amount of data to be returned
+         [ValidateSet('0', '4', '128', '1024', '4096')] [String] $OutputSize = '0'
     )
 
     # Prepare the data to be written
@@ -48,7 +48,7 @@ Function Set-OmenBiosWmi {
     $BiosMethods = Get-CimInstance -ClassName 'hpqBIntM' -CimSession $Session -Namespace 'root\wmi'
 
     # Make a call to write to the BIOS
-    $Result = Invoke-CimMethod -InputObject $BiosMethods -MethodName ('hpqBIOSInt' + $Size) -Arguments @{InData = [CimInstance] $BiosDataIn}
+    $Result = Invoke-CimMethod -InputObject $BiosMethods -MethodName ('hpqBIOSInt' + $OutputSize) -Arguments @{InData = [CimInstance] $BiosDataIn}
 
     # Terminate the session
     Remove-CimSession -CimSession $Session
@@ -71,19 +71,19 @@ $Args | ForEach-Object -Process {
     Switch($_) { 
         '-MaxFanSpeedOff' {
             Write-Information 'Set Maximum Fan Speed Off'
-            Set-OmenBiosWmi -CommandType 0x27 -Data 0x00 -Size 4 | Show-OmenHwCtlResult
+            Set-OmenBiosWmi -CommandType 0x27 -Data 0x00 | Show-OmenHwCtlResult
         }
         '-MaxFanSpeedOn' {
             Write-Information 'Set Maximum Fan Speed On'
-            Set-OmenBiosWmi -CommandType 0x27 -Data 0x01 -Size 4 | Show-OmenHwCtlResult
+            Set-OmenBiosWmi -CommandType 0x27 -Data 0x01 | Show-OmenHwCtlResult
         }
         '-MaxGpuPower' {
             Write-Information 'Set Maximum GPU Power'
-            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x57) -Size 128 | Show-OmenHwCtlResult
+            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x57) | Show-OmenHwCtlResult
         }
         '-MinGpuPower' {
             Write-Information 'Set Minimum GPU Power'
-            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x00, 0x00, 0x01, 0x00) -Size 128 | Show-OmenHwCtlResult
+            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x00, 0x00, 0x01, 0x00) | Show-OmenHwCtlResult
         }
     } 
 }
