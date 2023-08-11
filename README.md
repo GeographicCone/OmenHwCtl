@@ -1,6 +1,6 @@
 # OmenHwCtl: HP Omen Hardware Control
 
-Version: 2023-08-10
+Version: 2023-08-11
 
 ## Why
 
@@ -24,6 +24,8 @@ Further, the goal is to keep the replacement as compact as possible, and readily
 
 ### Now
 
+* Set CPU Power Limit (PL1)
+* Set CPU Power Limit in a concurrent usage scenario
 * Set Total Graphics Power (TGP) to highest
 * Set Total Graphics Power (TGP) to lowest
 * Toggle maximum fan speed on/off
@@ -38,21 +40,28 @@ The script can be trivially expanded to adjust other HP BIOS WMI settings. More 
 
 The script can be used directly from the command line by calling:
 
-`OmenHwCtl [-MaxFanSpeedOff|-MaxFanSpeedOn] [-MaxGpuPower|-MinGpuPower] [-Silent]`
+````
+OmenHwCtl
+ [-MaxFanSpeedOff|-MaxFanSpeedOn]
+ [-MaxGpuPower|-MinGpuPower]
+ [-SetConcurrentCpuPower <0-255>] [-SetCpuPower <0-255>]
+ [-Silent]
+````
 
 Where the parameters are:
 * `-MaxFanSpeedOff` Disable maximum fan speed mode
 * `-MaxFanSpeedOn` Enable maximum fan speed mode
 * `-MaxGpuPower` Set Total Graphics Power (TGP) to highest
 * `-MinGpuPower` Set Total Graphics Power (TGP) to lowest
-
+* `-SetConcurrentCpuPower <0-255>` Set CPU Power Limit in a concurrent usage scenario to a specified value
+* `-SetCpuPower <0-255>` Set CPU Power Limit (PL1) to a specified value
 * `-Silent` Suppress all text output (except usage note if called with no suitable parameters)
 
 ![OmenHwCtl Screenshot](https://raw.githubusercontent.com/GeographicCone/OmenHwCtl/master/OmenHwCtl.png)
 
 The actual script is `OmenHwCtl.ps1`. The file `OmenHwCtl.cmd` is provided as a wrapper to bypass the [execution policy settings](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy) that prevent PowerShell scripts from running by default. All it does is launching the actual script, passing all the command-line arguments (parameters) to it, and bypassing the default execution policy.
 
-Note: The script has to be run as an administrator.
+<ins>Note</ins>: The script has to be run as an administrator.
 
 ### Scheduled Task
 
@@ -62,7 +71,7 @@ To install the task, run the script `Maximum GPU Power Task.cmd` as an administr
 
 Once installed, the task will be visible in the _Task Scheduler_ (`Win-R`, type: `mmc taskschd.msc`, `Enter`). It can be further edited or deleted from there.
 
-Note: The XML file to set up the task is required to ensure that the task runs even if the system is booted when on battery power. This is not possible if adding a task with only the command-line options of `schtasks.exe`.
+<ins>Note</ins>: The XML file to set up the task is required to ensure that the task runs even if the system is booted when on battery power. This is not possible if adding a task with only the command-line options of `schtasks.exe`.
 
 ## What It Needs to Work
 
@@ -73,7 +82,7 @@ Note: The XML file to set up the task is required to ensure that the task runs e
     * `hpcustomcapdriver.inf` (for `ACPI\HPIC0003`)
     * `hpomencustomcapdriver.inf` (for `ACPI\HPIC0004`)
     * `hpomencustomcapext.inf` (ditto)
-  * It is specifically **neither necessary not recommended** to install the following driver, as it includes a lot of bloatware running in the background:
+  * It is specifically <ins>**neither necessary not recommended**</ins> to install the following driver, as it includes a lot of bloatware running in the background:
     * ~~`hpomencustomcapcomp.inf`~~
   * Other HP laptops, not just from the _Omen_ series, might work as well
 * Windows PowerShell 5.1
@@ -104,7 +113,7 @@ Where:
 * `-Command` is the command identifier, observed to be mostly constant: `0x20008` (131080) or `0x20009` (131081), defaults to the former if omitted.
 * `-CommandType` is the actual operation to be performed, for example `0x22` (34) or `0x27` (39).
 * `-Data` is the data to be passed to BIOS, for example `0x01` or `@(0x01, 0x00, 0x01, 0x00)` if passing an array.
-* `-Size` is actually the choice of the WMI method that will be used to transmit data: `hpqBIOSInt{0,4,128,1024,4096}`. It should be larger than the length of the data.
+* `-Size` determines the WMI method used to transmit data: `hpqBIOSInt{0,4,128,1024,4096}`, depending on how much data is expected to be returned. This is for reading BIOS values, which is currently not implemented.
 * `-Sign` is a shared secret, which appears to be constant, and is thus also embedded in the routine. If the default `@(0x53, 0x45, 0x43, 0x55)` (83, 69, 67, 85) does not work for you, you can pass a different one the same way as you would with `-Data`.
 
 #### Knowing What to Send
