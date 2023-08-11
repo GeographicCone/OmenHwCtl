@@ -79,7 +79,7 @@ $Args | ForEach-Object -Process {
         }
         '-MaxGpuPower' {
             Write-Information 'Set Maximum GPU Power'
-            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x00) -Size 128 | Show-OmenHwCtlResult
+            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x57) -Size 128 | Show-OmenHwCtlResult
         }
         '-MinGpuPower' {
             Write-Information 'Set Minimum GPU Power'
