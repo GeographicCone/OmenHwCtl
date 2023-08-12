@@ -8,24 +8,24 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-11'
+$MyVersion = '2023-08-12'
 
-# Set-OmenBiosWmi()
-# Makes a WMI call to set BIOS data:
+# Send-OmenBiosWmi()
+# Makes a WMI call to send a BIOS query:
 # this is where all the magic happens
-Function Set-OmenBiosWmi {
+Function Send-OmenBiosWmi {
 
     # Parameters & validation
     param (
 
-         # Mostly constant identifier (observed: 131080 or 131081)
+         # Mostly constant identifier (observed: 1, 131080 or 131081)
          [ValidateNotNullOrEmpty()] [UInt32] $Command = 0x20008,
 
          # The actual operation to perform
          [Parameter(Mandatory)] [UInt32] $CommandType,
 
-         # Data payload to be transmitted
-         [Parameter(Mandatory)] [Byte[]] $Data,
+         # Optional data payload to be transmitted
+         [Byte[]] $Data = $Null,
 
          # Pre-defined shared secret for authorization (observed: 83, 69, 67, 85)
          [ValidateNotNullOrEmpty()] [Byte[]] $Sign = @(0x53, 0x45, 0x43, 0x55),
@@ -34,13 +34,25 @@ Function Set-OmenBiosWmi {
          [ValidateSet('0', '4', '128', '1024', '4096')] [String] $OutputSize = '0'
     )
 
-    # Prepare the data to be written
-    $BiosDataIn = New-CimInstance -ClassName 'hpqBDataIn' -ClientOnly -Namespace 'root\wmi' -Property @{
-        Command = $Command;
-        CommandType = $CommandType;
-        hpqBData = $Data;
-        Size = [UInt32] $Data.Length;
-        Sign = $Sign;
+    # Ensure no usage information is displayed later if an attempt was made to run an operation
+    Set-Variable -Name OperationAttempted -Scope Global -Value $True
+
+    # Prepare the request, whether with or without data to be sent
+    if($Data -eq $Null) {
+        $BiosDataIn = New-CimInstance -ClassName 'hpqBDataIn' -ClientOnly -Namespace 'root\wmi' -Property @{
+            Command = $Command;
+            CommandType = $CommandType;
+            Size = [UInt32] 0;
+            Sign = $Sign;
+        }
+    } else {
+        $BiosDataIn = New-CimInstance -ClassName 'hpqBDataIn' -ClientOnly -Namespace 'root\wmi' -Property @{
+            Command = $Command;
+            CommandType = $CommandType;
+            hpqBData = $Data;
+            Size = [UInt32] $Data.Length;
+            Sign = $Sign;
+        }
     }
 
     # Start a CIM session and obtain BIOS method class instance
@@ -53,17 +65,27 @@ Function Set-OmenBiosWmi {
     # Terminate the session
     Remove-CimSession -CimSession $Session
 
-    # Return true if successful, false otherwise
-    Return $(If($Result.ReturnValue -and $Result.OutData.rwReturnCode -eq 0) { $True } Else { $False })
-}
+    # If operation completed succesfully
+    if($Result.OutData.rwReturnCode -eq 0) {
 
-# Show-OmenHwCtlResult()
-# Display whether the operation succeeded or failed
-# (unless running in silent mode)
-Function Show-OmenHwCtlResult {
-    param ([Parameter(ValueFromPipeline = $True)] [ValidateNotNullOrEmpty()] [Switch] $Result)
-    Set-Variable -Name OperationAttempted -Scope Global -Value $True
-    Write-Information $(If($Result) { '+ OK' } Else { '- Failed' })
+        # Show output data if available
+        if($OutputSize -ne '0') {
+            Write-Information $('+ OK: ' + $(($Result.OutData.Data | Format-Hex | Select-Object -Expand Bytes | ForEach-Object { '{0:x2}' -f $_ }) -Join ''))
+
+        # Or just show confirmation if no data
+        } else {
+            Write-Information '+ OK'
+        }
+
+    # If an error occured
+    } else {
+        Write-Information $('- Failed: Error ' + $Result.OutData.rwReturnCode + $(switch($Result.OutData.rwReturnCode) {
+
+            # Provide a description for known error codes
+            0x03 { ' - Command Not Available' }
+            0x05 { ' - Output Size Too Small' }
+        } ))
+    }
 }
 
 # Iterate through arguments and perform operations accordingly
@@ -71,37 +93,256 @@ $NextArg = 0
 ForEach($Arg in $Args) {
     $NextArg++
     Switch($Arg) { 
+        '-BacklightOff' {
+            Write-Information 'Set Backlight Off'
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x05 -Data 0x64
+            # Byte #0: 0x64 == 0b01100100 - Keyboard Backlight Off
+        }
+        '-BacklightOn' {
+            Write-Information 'Set Backlight On'
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x05 -Data 0xE4
+            # Byte #0: 0xE4 == 0b11100100 - Keyboard Backlight On
+        }
+        '-GetBacklight' {
+            Write-Information 'Get Backlight Status'
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x04 -Data 0x00 -OutputSize 128
+            # Byte #0: 0x64 == 0b01100100 - Keyboard Backlight Off,
+            #          0xE4 == 0b11100100 - Keyboard Backlight On
+        }
+        '-GetBacklightSupport' {
+            Write-Information 'Get Backlight Support'
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x01 -Data 0x00 -OutputSize 4
+            # Byte #0 Bit #0: 0b0 - No Backlight Support, 0b1 - Backlight Support
+            # Byte #0 == 0x07, Byte #1 == 0x21 [Description Pending]
+        }
+        '-GetBornOnDate' {
+            Write-Information 'Get Born on Date'
+            Send-OmenBiosWmi -Command 0x01 -CommandType 0x10 -OutputSize 128
+            # Bytes #0-#7: ASCII String "YYYYMMDD"
+        }
+        '-GetColorTable' {
+            Write-Information 'Get Color Table'
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x02 -Data 0x00 -OutputSize 128
+            # Byte #00: 0x03 - Number of Color Zones (4)
+            # Bytes #25, #26 & #27: Red, Green & Blue Values for Zone #0 (Right)
+            # Bytes #28, #29 & #30: Red, Green & Blue Values for Zone #1 (Middle)
+            # Bytes #31, #32 & #33: Red, Green & Blue Values for Zone #2 (Left)
+            # Bytes #34, #35 & #36: Red, Green & Blue Values for Zone #2 (WASD)
+        }
+        '-GetFanCount' {
+            Write-Information 'Get Fan Count'
+            Send-OmenBiosWmi -CommandType 0x10 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
+            # Byte #0: 0x02 - Number of Fans
+        }
+        '-GetFanLevel' {
+            Write-Information 'Get Fan Level'
+            Send-OmenBiosWmi -CommandType 0x2D -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
+            # Bytes #0 & #1: Observed 0x37 & 0x39 - Max Speed, 0x15 & 0x00 - Min Speed [Each Fan]
+        }
+        '-GetFanTable' {
+            Write-Information 'Get Fan Table'
+            Send-OmenBiosWmi -CommandType 0x2F -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
+            # Byte #0: 0x02 Number of Fans
+            # Byte #1: 0x0E == 14 Number of Entries
+            # Byte #2 & Onward: Entry #0: Fan #1 Speed, Fan #2 Speed, Temperature Threshold
+        }
+        '-GetFanType' {
+            Write-Information 'Get Fan Type'
+            Send-OmenBiosWmi -CommandType 0x2C -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
+            # Byte #0: 0x21 == 0b00100001
+            # (1) Bitwise conjunction with 15 == 0x0F == 0b00001111 results in 0x01
+            # (2) Bitwise conjunction with 240 == 0xF0 == 0b11110000
+            # and shifted right by 4 bits also results in 0x01
+            # (3) These are then added to the fan list
+        }
+        '-GetGfxMode' {
+            Write-Information 'Get Graphics Mode'
+            Send-OmenBiosWmi -Command 0x01 -CommandType 0x52 -OutputSize 4
+            # Byte #0: 0x00 - Hybrid, 0x01 - Discrete, 0x02 - Optimus
+        }
+        '-GetGpuStatus' {
+            Write-Information 'Get GPU Status'
+            Send-OmenBiosWmi -CommandType 0x21 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
+            # Byte #0: 0x00 - Custom TGP Off, 0x01 - Custom TGP On
+            # Byte #1: 0x00 - PPAB Off, 0x01 - PPAB On
+            # Byte #2: 0x01 - Current DState (?)
+            # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off, 0x4B - 75°C, 0x57 - 87°C
+         }
+        '-GetKbdType' {
+            Write-Information 'Get Keyboard Type'
+            Send-OmenBiosWmi -CommandType 0x2B -Data 0x00 -OutputSize 4
+            # Byte #0: 0x00 - Standard, 0x01 - w/Numpad, 0x02 - Tenkeyless w/o Numpad, 0x03 - Per-Key RGB (?)
+        }
+        '-GetLedAnim' {
+            Write-Information 'Get LED Animation'
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x06 -Data 0x00 -OutputSize 128
+            # All Bytes: 0x00
+        }
+        '-GetMaxFanStatus' {
+            Write-Information 'Get Max Fan Status'
+            Send-OmenBiosWmi -CommandType 0x26 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
+            # Byte #0: 0x00 - Max Fan Speed Off, 0x01 - Max Fan Speed On
+         }
+        '-GetOcSupport' {
+            Write-Information 'Get Overclocking Support'
+            Send-OmenBiosWmi -CommandType 0x35 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
+            # Byte #2: 0x03 (0x00 - No Support)
+         }
+        '-GetSmartAdapterStatus' {
+            Write-Information 'Get Smart Adapter Status'
+            Send-OmenBiosWmi -Command 0x01 -CommandType 0x0F -OutputSize 4
+            # Byte #0: 0x01
+        }
+        '-GetSysDesignData' {
+            Write-Information 'Get System Design Data'
+            Send-OmenBiosWmi -CommandType 0x28 -OutputSize 128
+            # Byte #2: 0x01 - Thermal Policy Version
+            # Byte #5: 0xD7 == 215 [W] - Default Power Limit 4 Value
+        }
+        '-GetTemp' {
+            Write-Information 'Get Temperature'
+            Send-OmenBiosWmi -CommandType 0x23 -Data @(0x01, 0x00, 0x00, 0x00) -OutputSize 4
+            # Byte #0: Observed 0x1D - Lowest, 0x31 - Highest
+            # Variant Where Input Data Byte #1: 0x01 - Same Result
+        }
+        '-GetThermalThrottlingStatus' {
+            Write-Information 'Get Thermal Throttling Status'
+            Send-OmenBiosWmi -CommandType 0x35 -Data @(0x00, 0x04, 0x00, 0x00) -OutputSize 128
+            # Byte #1 == 0x04 (0x01 - Thermal Throttling On)
+         }
         '-MaxFanSpeedOff' {
             Write-Information 'Set Maximum Fan Speed Off'
-            Set-OmenBiosWmi -CommandType 0x27 -Data 0x00 | Show-OmenHwCtlResult
+            Send-OmenBiosWmi -CommandType 0x27 -Data 0x00
+            # Byte #0: 0x01 - Maximum Fan Speed Off
         }
         '-MaxFanSpeedOn' {
             Write-Information 'Set Maximum Fan Speed On'
-            Set-OmenBiosWmi -CommandType 0x27 -Data 0x01 | Show-OmenHwCtlResult
+            Send-OmenBiosWmi -CommandType 0x27 -Data 0x01
+            # Byte #0: 0x01 - Maximum Fan Speed On
         }
         '-MaxGpuPower' {
             Write-Information 'Set Maximum GPU Power'
-            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x57) | Show-OmenHwCtlResult
+            Send-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x00)
+            # Byte #0: 0x01 - Custom TGP On
+            # Byte #1: 0x01 - PPAB On
+            # Byte #2: 0x01 - DState
+            # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off (0x4B - 75°C, 0x57 - 87°C)
         }
         '-MinGpuPower' {
             Write-Information 'Set Minimum GPU Power'
-            Set-OmenBiosWmi -CommandType 0x22 -Data @(0x00, 0x00, 0x01, 0x00) | Show-OmenHwCtlResult
+            Send-OmenBiosWmi -CommandType 0x22 -Data @(0x00, 0x00, 0x01, 0x00)
+            # Byte #0: 0x00 - Custom TGP Off
+            # Byte #1: 0x00 - PPAB Off
+            # Byte #2: 0x01 - DState
+            # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off
+        }
+        '-SetColor4' {
+            Write-Information 'Set Color (4-Zone)'
+            [Byte[]] $ColorTable = @(
+                [Byte[]] @(,[Byte] 0x03) `
+                + [Byte[]] @($(New-Object Byte[] 24)) `
+                + [Byte[]] @($Args[$NextArg] `
+                    -Replace '[^a-fA-F0-9]+', '' `
+                    -Replace '..', '0x$& ' `
+                    -Replace ' $', '' -Split ' ' `
+                    | ForEach-Object { $_ }) `
+                + [Byte[]] @($(New-Object Byte[] 91))
+            )
+            Send-OmenBiosWmi -Command 0x20009 -CommandType 0x03 -Data $ColorTable
+            # Byte #00: 0x03 - Number of Color Zones (4)
+            # Bytes #01-#24 (24) & #37-#127 (91): 0x00
+            # Bytes #25, #26 & #27: Red, Green & Blue Values for Zone #0 (Right)
+            # Bytes #28, #29 & #30: Red, Green & Blue Values for Zone #1 (Middle)
+            # Bytes #31, #32 & #33: Red, Green & Blue Values for Zone #2 (Left)
+            # Bytes #34, #35 & #36: Red, Green & Blue Values for Zone #2 (WASD)
         }
         '-SetConcurrentCpuPower' {
-            $Value = [byte] $Args[$NextArg]
+            $Value = [Byte] $Args[$NextArg]
             Write-Information $('Set Concurrent CPU Power Limit to: ' + $Value + 'W')
-            Set-OmenBiosWmi -CommandType 0x29 -Data @(0xFF, 0xFF, 0xFF, $Value) | Show-OmenHwCtlResult
+            Send-OmenBiosWmi -CommandType 0x29 -Data @(0xFF, 0xFF, 0xFF, $Value)
+            # Bytes #0 & #1: 0xFF - Do Not Set Power Limit 1
+            # Byte #2: 0xFF - Do Not Set Power Limit 4
+            # Byte #3: Concurrent CPU Power Limit
         }
         '-SetCpuPower' {
-            $Value = [byte] $Args[$NextArg]
-            Write-Information $('Set CPU Power Limit to: ' + $Value + 'W')
-            Set-OmenBiosWmi -CommandType 0x29 -Data @($Value, $Value, 0xFF, 0xFF) | Show-OmenHwCtlResult
+            $Value = [Byte] $Args[$NextArg]
+            Write-Information $('Set CPU Power Limit (PL1) to: ' + $Value + 'W')
+            Send-OmenBiosWmi -CommandType 0x29 -Data @($Value, $Value, 0xFF, 0xFF)
+            # Bytes #0 & #1: CPU Power Limit 1
+            # Byte #2: 0xFF - Do Not Set Power Limit 4
+            # Byte #3: 0xFF - Do Not Set Concurrent CPU Power Limit
         }
-    } 
+        '-SetCpuPowerMax' {
+            $Value = [Byte] $Args[$NextArg]
+            Write-Information $('Set Max CPU Power Limit (PL4) to: ' + $Value + 'W')
+            Send-OmenBiosWmi -CommandType 0x29 -Data @(0xFF, 0xFF, $Value, 0xFF)
+            # Bytes #0 & #1: 0xFF - Do Not Set CPU Power Limit 1
+            # Byte #2: Power Limit 4
+            # Byte #3: 0xFF - Do Not Set Concurrent CPU Power Limit
+        }
+        '-SetFanLevel' {
+            [Byte[]] $FanLevel = [Byte[]] @($Args[$NextArg] `
+                    -Replace '[^a-fA-F0-9]+', '' `
+                    -Replace '..', '0x$& ' `
+                    -Replace ' $', '' -Split ' ' `
+                    | ForEach-Object { $_ })
+            Write-Information $('Set Fan Level to: ' + $FanLevel[0] * 100 + ' & ' + $FanLevel[1] * 100 + ' rpm')
+            Send-OmenBiosWmi -CommandType 0x2E -Data $FanLevel
+            # Bytes #0 & #1: CPU & GPU Fan Level
+        }
+        '-SetFanMode' {
+            $Value = [Byte] $Args[$NextArg]
+            Write-Information $('Set Fan Mode to: ' + $Value)
+            Send-OmenBiosWmi -CommandType 0x1A -Data @(0xFF, $Value)
+            # Byte #0: 0xFF - Constant (?)
+            # Byte #1: Default/Eco → L2, Cool → L4, Performance → L7
+            # 0x00 - Default/Eco, 0x01 - Performance, 0x02 - Cool, 0x03 - Quiet, 0x04 - Extreme (L8)
+            # 0x10 - L0, 0x20 - L1, 0x30 - L2, 0x40 - L3, 0x50 - L4, 0x11 - L5, 0x21 - L6, 0x31 - L7
+        }
+        '-SetFanTable' {
+            Write-Information 'Set Fan Table'
+            [Byte[]] $FanTableData = [Byte[]] @($Args[$NextArg] `
+                    -Replace '[^a-fA-F0-9]+', '' `
+                    -Replace '..', '0x$& ' `
+                    -Replace ' $', '' -Split ' ' `
+                    | ForEach-Object { $_ })
+            [Byte[]] $FanTable = @(
+                [Byte[]] $FanTableData `
+                + [Byte[]] @($(New-Object Byte[] $(128 - $FanTableData.Length)))
+            )
+            Send-OmenBiosWmi -CommandType 0x32 -Data @(0x01,0x64,0x62) # $FanTable
+            # [Description Pending]
+        }
+        '-SetIdleOff' {
+            Write-Information 'Set Idle Off'
+            Send-OmenBiosWmi -CommandType 0x31 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
+            # Byte #0: 0x00 - Idle Off
+        }
+        '-SetIdleOn' {
+            Write-Information 'Set Idle On'
+            Send-OmenBiosWmi -CommandType 0x31 -Data @(0x01, 0x00, 0x00, 0x00) -OutputSize 4
+            # Byte #0: 0x01 - Idle On
+        }
+        '-SetLedAnim' {
+            Write-Information 'Set LED Animation'
+            Write-Information '- Not Implemented'
+            #Send-OmenBiosWmi -Command 0x20009 -CommandType 0x07 -Data $LedAnimTable
+            # [Description Pending]
+        }
+    }
 }
 
 # If not a single operation was attempted, display usage prompt
 if(!$OperationAttempted) {
     Write-Host 'Omen Hardware Control Script - Version' $MyVersion
-    Write-Host 'Usage:' $MyInvocation.MyCommand.Name`r`n' [-MaxFanSpeedOff|-MaxFanSpeedOn]'`r`n' [-MaxGpuPower|-MinGpuPower]' `r`n '[-SetConcurrentCpuPower <0-255>] [-SetCpuPower <0-255>]'`r`n' [-Silent]'
+    Write-Host 'Usage:' $MyInvocation.MyCommand.Name`r`n `
+' [-GetBornOnDate] [-GetOcSupport] [-GetSmartAdapterStatus] [-GetSysDesignData]'`r`n `
+' [-GetFanCount] [-GetFanLevel] [-GetFanTable] [-GetFanType] [-GetMaxFanStatus]'`r`n `
+' [-GetGfxMode] [-GetGpuStatus] [-GetTemp] [-GetThermalThrottlingStatus]'`r`n `
+' [-GetBacklight] [-GetBacklightSupport] [-GetColorTable] [-GetKbdType] [-GetLedAnim]'`r`n `
+' [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]'`r`n `
+' [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]'`r`n `
+' [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <00-FF>] [-SetFanTable <00-FF>+ (# < 128)]'`r`n `
+' [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]'`r`n `
+' [-SetLedAnim] [-Silent]'
 }
