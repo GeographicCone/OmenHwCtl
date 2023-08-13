@@ -1,6 +1,6 @@
 # OmenHwCtl: HP Omen Hardware Control
 
-Version: 2023-08-12
+Version: 2023-08-14
 
 ## What It Does
 
@@ -10,7 +10,9 @@ Version: 2023-08-12
 * CPU Power Limit in a concurrent usage scenario
 * Total Graphics Power (TGP): enable or disable Custom TGP (cTGP) and PPAB
 * Fan mode, speed, the dynamic fan table, maximum fan speed on/off
+* Custom task to be run when Omen Key is pressed
 * Backlight color and turn backlight on/off
+* Memory to XMP mode
 * Idle mode on/off
 
 ### Query
@@ -22,9 +24,10 @@ Version: 2023-08-12
 * Other system features and settings exposed by the BIOS:
   * Born On Date (BOD)
   * Keyboard type
-  * Overclocking Support status
+  * Overclocking and memory overclocking support status
   * Smart Adapter status
   * System Design Data
+  * Undervolting support
 
 ## How to Use It
 
@@ -38,6 +41,7 @@ OmenHwCtl
  [-GetFanCount] [-GetFanLevel] [-GetFanTable] [-GetFanType] [-GetMaxFanStatus]
  [-GetGfxMode] [-GetGpuStatus] [-GetTemp] [-GetThermalThrottlingStatus]
  [-GetBacklight] [-GetBacklightSupport] [-GetColorTable] [-GetKbdType] [-GetLedAnim]
+ [-GetBiosUndervoltSupport] [-GetMemOcSupport] [-SetMemXmp] [-OmenKeyOff|-OmenKeyOn]
  [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]
  [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]
  [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <00-FF>] [-SetFanTable <00-FF>+ (# < 128)]
@@ -51,6 +55,7 @@ Where the parameters are:
 * `-BacklightOff` and `-BacklightOn` Disable or enable keyboard backlight
 * `-GetBacklight` Report backlight status
 * `-GetBacklightSupport` Check for backlight support
+* `-GetBiosUndervoltSupport` Check for undervolting support in BIOS
 * `-GetBornOnDate` Output system manufacturing date ("born-on date", BOD)
 * `-GetColorTable` Retrieve current backlight color information
 * `-GetFanCount` Report number of fans
@@ -62,6 +67,7 @@ Where the parameters are:
 * `-GetKbdType` Check keyboard type
 * `-GetLedAnim` Retrieve LED animation table
 * `-GetMaxFanStatus` Check if fans are operating in maximum-speed mode
+* `-GetMemOcSupport` Check memory overclocking support
 * `-GetOcSupport` Check for overclocking support as reported by the BIOS
 * `-GetSmartAdapterStatus` Check Smart Adapter status
 * `-GetSysDesignData` Retrieve system design data, including Thermal Policy Version and default PL4
@@ -69,6 +75,7 @@ Where the parameters are:
 * `-GetThermalThrottlingStatus` Check if system is currently thermal throttling
 * `-MaxFanSpeedOff` and `-MaxFanSpeedOn` Disable or enable maximum fan speed mode
 * `-MaxGpuPower` and `-MinGpuPower` Adjust Total Graphics Power (TGP) by enabling or disabling custom TGP (cTGP) and PPAB
+* `-OmenKeyOff` and `-OmenKeyOn` Run a custom task whenever the Omen Key is pressed
 * `-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)` Set backlight color for a 4-zone keyboard
 * `-SetConcurrentCpuPower <0-254>` Set CPU Power Limit in a concurrent usage scenario to a specified value
 * `-SetCpuPower <0-254>` Set CPU Power Limit (PL1) to a specified value
@@ -78,12 +85,15 @@ Where the parameters are:
 * `-SetFanTable <00-FF>+ (# < 128)` Set the dynamic fan table (fan mode-dependent)
 * `-SetIdleOff` `-SetIdleOn` Disable or enable idle mode
 * `-SetLedAnim` Set LED animation table, reserved but not implemented
+* `-SetMemXmp` Set memory to XMP mode (following reboot)
 * `-Silent` Suppress all text output (except usage note if called with no suitable parameters)
 
 #### Examples
 
+* `-MaxGpuPower` makes the GPU run at maximum power, enabling custom TGP (cTGP) and PPAB - the original reason why this script was written
 * `-SetColor4 00FF00:00FF00:0080FF:FFFFFFF` sets right and middle zones to green, left to sky blue, and the WASD keys to white
 * `-SetCpuPower 45 -SetCpuPowerMax 215` sets PL1 to 45W and PL4 to 215W (multiple operations can be performed in one go)
+* `-OmenKeyOn` sets up a custom WMI event filter so that the task "Omen Key" will run whenever the Omen Key is pressed
 
 #### Notes
 
@@ -92,6 +102,8 @@ The actual script is `OmenHwCtl.ps1`. The file `OmenHwCtl.cmd` is provided as a 
 There is currently no parameter validation. It's on you to make sure the values you specify are correct.
 
 The script has to run as an administrator.
+
+To use the Omen Key, run `Omen Key Task.cmd` (as an administrator) to add a task that will run whenever the Omen Key is pressed. You might want to edit the `Omen Key Task.xml` file beforehand: by default it just runs _Notepad_.
 
 ### Scheduled Task
 
