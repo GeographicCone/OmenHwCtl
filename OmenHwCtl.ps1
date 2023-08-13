@@ -148,20 +148,20 @@ ForEach($Arg in $Args) {
             # Byte #0: 0x02 Number of Fans
             # Byte #1: 0x0E == 14 Number of Entries
             # Byte #2 & Onward: Entry #0: (Fan #1 Speed, Fan #2 Speed) @ Temperature Threshold
-            # Bytes #02-#04: Entry #01: (00, 00) @ 0F
-            # Bytes #05-#07: Entry #02: (15, 00) @ 15
-            # Bytes #08-#10: Entry #03: (16, 14) @ 17
-            # Bytes #11-#13: Entry #04: (18, 16) @ 19
-            # Bytes #14-#16: Entry #05: (1A, 18) @ 1C
-            # Bytes #17-#19: Entry #06: (1B, 19) @ 1E
-            # Bytes #20-#22: Entry #07: (1C, 1A) @ 1F
-            # Bytes #23-#25: Entry #08: (1D, 1F) @ 21
-            # Bytes #26-#28: Entry #09: (20, 23) @ 24
-            # Bytes #29-#31: Entry #10: (25, 27) @ 28
-            # Bytes #32-#34: Entry #11: (28, 2A) @ 2A
-            # Bytes #35-#37: Entry #12: (2D, 2F) @ 2D
-            # Bytes #38-#40: Entry #13: (32, 34) @ 30
-            # Bytes #41-#43: Entry #14: (37, 39) @ 32
+            # Bytes #02-#04: Entry #01: (0x00, 0x00) @ 0x0F
+            # Bytes #05-#07: Entry #02: (0x15, 0x00) @ 0x15
+            # Bytes #08-#10: Entry #03: (0x16, 0x14) @ 0x17
+            # Bytes #11-#13: Entry #04: (0x18, 0x16) @ 0x19
+            # Bytes #14-#16: Entry #05: (0x1A, 0x18) @ 0x1C
+            # Bytes #17-#19: Entry #06: (0x1B, 0x19) @ 0x1E
+            # Bytes #20-#22: Entry #07: (0x1C, 0x1A) @ 0x1F
+            # Bytes #23-#25: Entry #08: (0x1D, 0x1F) @ 0x21
+            # Bytes #26-#28: Entry #09: (0x20, 0x23) @ 0x24
+            # Bytes #29-#31: Entry #10: (0x25, 0x27) @ 0x28
+            # Bytes #32-#34: Entry #11: (0x28, 0x2A) @ 0x2A
+            # Bytes #35-#37: Entry #12: (0x2D, 0x2F) @ 0x2D
+            # Bytes #38-#40: Entry #13: (0x32, 0x34) @ 0x30
+            # Bytes #41-#43: Entry #14: (0x37, 0x39) @ 0x32
             # Bytes #44-#127: 0x00
         }
         '-GetFanType' {
@@ -369,7 +369,7 @@ ForEach($Arg in $Args) {
                 [Byte[]] $FanTableData `
                 + [Byte[]] @($(New-Object Byte[] $(128 - $FanTableData.Length)))
             )
-            Send-OmenBiosWmi -CommandType 0x32 -Data @(0x01,0x64,0x62) # $FanTable
+            Send-OmenBiosWmi -CommandType 0x32 -Data $FanTable
             # [Description Pending]
         }
         '-SetIdleOff' {
