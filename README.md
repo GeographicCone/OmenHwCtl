@@ -149,7 +149,7 @@ The script uses PowerShell's [CimCmdlets](https://learn.microsoft.com/en-us/powe
 
 The main function can be used to send any data to the BIOS:
 
-`Set-OmenBiosWmi -CommandType <OPERATION> -Data <DATA> -OutputSize <0|4|128|1024|4096>`
+`Send-OmenBiosWmi -CommandType <OPERATION> -Data <DATA> -OutputSize <0|4|128|1024|4096>`
 
 Where:
 * `-Command` is the command identifier, observed to be mostly constant: `0x20008` (131080), although `0x01` and `0x20009` (131081) are also used. Defaults to the former if omitted.
