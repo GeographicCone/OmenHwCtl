@@ -1,4 +1,3 @@
-
 # OmenHwCtl.ps1
 
 # Adjust HP Omen hardware settings with no
@@ -8,7 +7,10 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-12'
+$MyVersion = '2023-08-14'
+
+# Start a CIM session
+$Session = New-CimSession -Name 'hpq' -SkipTestConnection
 
 # Send-OmenBiosWmi()
 # Makes a WMI call to send a BIOS query:
@@ -55,15 +57,11 @@ Function Send-OmenBiosWmi {
         }
     }
 
-    # Start a CIM session and obtain BIOS method class instance
-    $Session = New-CimSession -Name 'hpq' -SkipTestConnection
+    # Obtain BIOS method class instance
     $BiosMethods = Get-CimInstance -ClassName 'hpqBIntM' -CimSession $Session -Namespace 'root\wmi'
 
     # Make a call to write to the BIOS
     $Result = Invoke-CimMethod -InputObject $BiosMethods -MethodName ('hpqBIOSInt' + $OutputSize) -Arguments @{InData = [CimInstance] $BiosDataIn}
-
-    # Terminate the session
-    Remove-CimSession -CimSession $Session
 
     # If operation completed succesfully
     if($Result.OutData.rwReturnCode -eq 0) {
@@ -109,6 +107,11 @@ ForEach($Arg in $Args) {
             # Byte #0: 0x64 == 0b01100100 - Keyboard Backlight Off,
             #          0xE4 == 0b11100100 - Keyboard Backlight On
         }
+        '-GetBiosUndervoltSupport' {
+            Write-Information 'Get BIOS Undervolting Support'
+            Send-OmenBiosWmi -CommandType 0x35 -Data @(0x00,0x00,0x00,0x00) -OutputSize 128
+            # Byte #2: 0x01 == BIOS Undervolting Support (Observed 0x03)
+        }
         '-GetBacklightSupport' {
             Write-Information 'Get Backlight Support'
             Send-OmenBiosWmi -Command 0x20009 -CommandType 0x01 -Data 0x00 -OutputSize 4
@@ -127,7 +130,7 @@ ForEach($Arg in $Args) {
             # Bytes #25, #26 & #27: Red, Green & Blue Values for Zone #0 (Right)
             # Bytes #28, #29 & #30: Red, Green & Blue Values for Zone #1 (Middle)
             # Bytes #31, #32 & #33: Red, Green & Blue Values for Zone #2 (Left)
-            # Bytes #34, #35 & #36: Red, Green & Blue Values for Zone #2 (WASD)
+            # Bytes #34, #35 & #36: Red, Green & Blue Values for Zone #3 (WASD)
         }
         '-GetFanCount' {
             Write-Information 'Get Fan Count'
@@ -144,7 +147,22 @@ ForEach($Arg in $Args) {
             Send-OmenBiosWmi -CommandType 0x2F -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
             # Byte #0: 0x02 Number of Fans
             # Byte #1: 0x0E == 14 Number of Entries
-            # Byte #2 & Onward: Entry #0: Fan #1 Speed, Fan #2 Speed, Temperature Threshold
+            # Byte #2 & Onward: Entry #0: (Fan #1 Speed, Fan #2 Speed) @ Temperature Threshold
+            # Bytes #02-#04: Entry #01: (00, 00) @ 0F
+            # Bytes #05-#07: Entry #02: (15, 00) @ 15
+            # Bytes #08-#10: Entry #03: (16, 14) @ 17
+            # Bytes #11-#13: Entry #04: (18, 16) @ 19
+            # Bytes #14-#16: Entry #05: (1A, 18) @ 1C
+            # Bytes #17-#19: Entry #06: (1B, 19) @ 1E
+            # Bytes #20-#22: Entry #07: (1C, 1A) @ 1F
+            # Bytes #23-#25: Entry #08: (1D, 1F) @ 21
+            # Bytes #26-#28: Entry #09: (20, 23) @ 24
+            # Bytes #29-#31: Entry #10: (25, 27) @ 28
+            # Bytes #32-#34: Entry #11: (28, 2A) @ 2A
+            # Bytes #35-#37: Entry #12: (2D, 2F) @ 2D
+            # Bytes #38-#40: Entry #13: (32, 34) @ 30
+            # Bytes #41-#43: Entry #14: (37, 39) @ 32
+            # Bytes #44-#127: 0x00
         }
         '-GetFanType' {
             Write-Information 'Get Fan Type'
@@ -165,7 +183,7 @@ ForEach($Arg in $Args) {
             Send-OmenBiosWmi -CommandType 0x21 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
             # Byte #0: 0x00 - Custom TGP Off, 0x01 - Custom TGP On
             # Byte #1: 0x00 - PPAB Off, 0x01 - PPAB On
-            # Byte #2: 0x01 - Current DState (?)
+            # Byte #2: 0x01 - Current DState
             # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off, 0x4B - 75°C, 0x57 - 87°C
          }
         '-GetKbdType' {
@@ -183,6 +201,11 @@ ForEach($Arg in $Args) {
             Send-OmenBiosWmi -CommandType 0x26 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
             # Byte #0: 0x00 - Max Fan Speed Off, 0x01 - Max Fan Speed On
          }
+        '-GetMemOcSupport' {
+            Write-Information 'Get Memory Overclocking Support'
+            Send-OmenBiosWmi -CommandType 0x18 -Data 0x00 -OutputSize 128
+            # Byte #2: 0x01 == Memory Overclocking Support (Observed 0x00)
+        }
         '-GetOcSupport' {
             Write-Information 'Get Overclocking Support'
             Send-OmenBiosWmi -CommandType 0x35 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
@@ -196,7 +219,11 @@ ForEach($Arg in $Args) {
         '-GetSysDesignData' {
             Write-Information 'Get System Design Data'
             Send-OmenBiosWmi -CommandType 0x28 -OutputSize 128
+            # Bytes #1 & #0:       0x00 0xE6 = 0b011100110
+            #                   >= 0x01 0x18 = 0b100011000 - TGP PPAB Enabled
+            #                            
             # Byte #2: 0x01 - Thermal Policy Version
+            # Byte #4: 0x01 - Software Fan Control Support
             # Byte #5: 0xD7 == 215 [W] - Default Power Limit 4 Value
         }
         '-GetTemp' {
@@ -235,6 +262,38 @@ ForEach($Arg in $Args) {
             # Byte #1: 0x00 - PPAB Off
             # Byte #2: 0x01 - DState
             # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off
+        }
+        '-OmenKeyOff' {
+            Write-Information 'Set Omen Key Off'
+            Set-Variable -Name OperationAttempted -Scope Global -Value $True
+            Get-CimInstance -CimSession $Session -ClassName '__EventFilter' -Namespace 'root\subscription' `
+                -Filter "Name='OmenKeyFilter'" | Remove-CimInstance
+            Get-CimInstance -CimSession $Session -ClassName 'CommandLineEventConsumer' -Namespace 'root\subscription' `
+                -Filter "Name='OmenKeyConsumer'" | Remove-CimInstance
+            Get-CimInstance -CimSession $Session -ClassName '__FilterToConsumerBinding' -Namespace 'root\subscription' `
+                -Filter "Filter = ""__EventFilter.Name='OmenKeyFilter'""" | Remove-CimInstance
+        }
+        '-OmenKeyOn' {
+            Write-Information 'Set Omen Key On'
+            Set-Variable -Name OperationAttempted -Scope Global -Value $True
+            $OmenKeyConsumer = New-CimInstance -CimSession $Session -ClassName 'CommandLineEventConsumer' `
+                -Namespace 'root\subscription' -Property  @{`
+                    CommandLineTemplate = 'C:\Windows\System32\schtasks.exe /run /tn "Omen Key"';
+                    ExecutablePath = 'C:\Windows\System32\schtasks.exe';
+                    Name = 'OmenKeyConsumer';
+                }
+            $OmenKeyFilter = New-CimInstance -CimSession $Session -ClassName '__EventFilter' `
+                -Namespace 'root\subscription' -Property @{`
+                    EventNameSpace = 'root\wmi';
+                    Name = 'OmenKeyFilter';
+                    Query = 'SELECT * FROM hpqBEvnt WHERE eventData = 8613 AND eventId = 29';
+                    QueryLanguage = 'WQL';
+                }
+            $OmenKeyBinding = New-CimInstance -CimSession $Session -ClassName '__FilterToConsumerBinding' `
+                    -Namespace 'root\subscription' -Property @{`
+                        Consumer = [Ref] $OmenKeyConsumer
+                        Filter = [Ref] $OmenKeyFilter;
+                }
         }
         '-SetColor4' {
             Write-Information 'Set Color (4-Zone)'
@@ -329,8 +388,16 @@ ForEach($Arg in $Args) {
             #Send-OmenBiosWmi -Command 0x20009 -CommandType 0x07 -Data $LedAnimTable
             # [Description Pending]
         }
+        '-SetMemXmp' {
+            Write-Information 'Set Memory to XMP Profile'
+            Send-OmenBiosWmi -CommandType 0x19 -Data @(0x01, 0x00, 0x00, 0x00)
+            # Byte #0: 0x01 - Idle On
+        }
     }
 }
+
+# Terminate the CIM session
+Remove-CimSession -CimSession $Session
 
 # If not a single operation was attempted, display usage prompt
 if(!$OperationAttempted) {
@@ -340,6 +407,7 @@ if(!$OperationAttempted) {
 ' [-GetFanCount] [-GetFanLevel] [-GetFanTable] [-GetFanType] [-GetMaxFanStatus]'`r`n `
 ' [-GetGfxMode] [-GetGpuStatus] [-GetTemp] [-GetThermalThrottlingStatus]'`r`n `
 ' [-GetBacklight] [-GetBacklightSupport] [-GetColorTable] [-GetKbdType] [-GetLedAnim]'`r`n `
+' [-GetBiosUndervoltSupport] [-GetMemOcSupport] [-SetMemXmp] [-OmenKeyOff|-OmenKeyOn]'`r`n `
 ' [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]'`r`n `
 ' [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]'`r`n `
 ' [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <00-FF>] [-SetFanTable <00-FF>+ (# < 128)]'`r`n `
