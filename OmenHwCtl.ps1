@@ -7,7 +7,7 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-14'
+$MyVersion = '2023-08-15'
 
 # Start a CIM session
 $Session = New-CimSession -Name 'hpq' -SkipTestConnection
@@ -168,7 +168,7 @@ ForEach($Arg in $Args) {
             Write-Information 'Get Fan Type'
             Send-OmenBiosWmi -CommandType 0x2C -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 128
             # Byte #0: 0x21 == 0b00100001
-            # (1) Bitwise conjunction with 15 == 0x0F == 0b00001111 results in 0x01
+            # (1) Bitwise conjunction with  15 == 0x0F == 0b00001111 results in 0x01
             # (2) Bitwise conjunction with 240 == 0xF0 == 0b11110000
             # and shifted right by 4 bits also results in 0x01
             # (3) These are then added to the fan list
@@ -214,17 +214,24 @@ ForEach($Arg in $Args) {
         '-GetSmartAdapterStatus' {
             Write-Information 'Get Smart Adapter Status'
             Send-OmenBiosWmi -Command 0x01 -CommandType 0x0F -OutputSize 4
-            # Byte #0: 0x01
+            # Bytes #1 & #0: 0x0001 - Meets Requirement, Other Possibilities:
+            # 0x0000 - No Support, 0x0002 - Below Requirement, 0x0003 - Battery Power,
+            # 0x0004 - Not Functioning, 0xFFFF - Error
         }
         '-GetSysDesignData' {
             Write-Information 'Get System Design Data'
             Send-OmenBiosWmi -CommandType 0x28 -OutputSize 128
             # Bytes #1 & #0:       0x00 0xE6 = 0b011100110
             #                   >= 0x01 0x18 = 0b100011000 - TGP PPAB Enabled
-            #                            
+            #                   >= 0x00 0xC8 = 0b011001000 - BIOS Performance Mode Enabled
             # Byte #2: 0x01 - Thermal Policy Version
-            # Byte #4: 0x01 - Software Fan Control Support
+            # Byte #4 Bit 0: Software Fan Control Support
+            # Byte #4 Bit 1: Extreme Mode Support
+            # Byte #4 Bit 2: Extreme Mode Unlocked
             # Byte #5: 0xD7 == 215 [W] - Default Power Limit 4 Value
+            # Byte #6: 0x01 - BIOS-Defined Overclocking Support
+            # Byte #7: 0x0c
+            # Byte #8: 0x00 - Default Concurrent TDP (Cybug 23C1)
         }
         '-GetTemp' {
             Write-Information 'Get Temperature'
@@ -370,7 +377,7 @@ ForEach($Arg in $Args) {
                 + [Byte[]] @($(New-Object Byte[] $(128 - $FanTableData.Length)))
             )
             Send-OmenBiosWmi -CommandType 0x32 -Data $FanTable
-            # [Description Pending]
+            # Note: This appears to be a desktop-only functionality
         }
         '-SetIdleOff' {
             Write-Information 'Set Idle Off'
