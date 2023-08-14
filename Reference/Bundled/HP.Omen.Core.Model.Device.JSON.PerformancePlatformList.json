@@ -1,0 +1,604 @@
+[
+  {
+    "SSID": "84DA",
+    "AlwaysSupport": false,
+    "CoolModeSupportBios": [
+      {
+        "MajorVersion": "Beta",
+        "MinorVersion": 22
+      },
+      {
+        "MajorVersion": "Formal",
+        "MinorVersion": 6
+      }
+    ]
+  },
+  {
+    "SSID": "84DB",
+    "AlwaysSupport": true,
+    "CoolModeSupportBios": [
+      {
+        "MajorVersion": "Beta",
+        "MinorVersion": 22
+      },
+      {
+        "MajorVersion": "Formal",
+        "MinorVersion": 6
+      }
+    ]
+  },
+
+  // DRX
+  {
+    "SSID": "8572",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8573",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+
+  // Gamora 19C1
+  {
+    "SSID": "8574",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true
+  },
+  {
+    "SSID": "8575",
+    "AlwaysSupport": false
+  },
+  {
+    "SSID": "860A",
+    "AlwaysSupport": false
+  },
+
+  // Gamora 20C1
+  {
+    "SSID": "87B5",
+    "AlwaysSupport": false
+  },
+
+  // Milos
+  {
+    "SSID": "8600",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8601",
+    "AlwaysSupport": false,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8602", //Milos Studio OLED
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8605", //Milos Studio
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8606", //Milos Studio
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8607",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8746",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8747",
+    "AlwaysSupport": false,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8749",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "874A",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+
+  // Santorini
+  {
+    "SSID": "8603",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8604",
+    "AlwaysSupport": false,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8748",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "IsMaxFanSupported": true
+  },
+
+  // Starmade
+  {
+    "SSID": "878A",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "Sku": "N18E"
+  },
+  {
+    "SSID": "878B",
+    "AlwaysSupport": true,
+    "IsPowerAwareSupported": true,
+    "Sku": "N18E"
+  },
+  {
+    "SSID": "878C",
+    "AlwaysSupport": false,
+    "Sku": "N18P"
+  },
+
+  // Starmade - 21C1
+  {
+    "SSID": "88C8", // GN20
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "88CB", // TGL
+    "AlwaysSupport": true,
+    "Sku": "TGL"
+  },
+
+  // Valkyrie
+  {
+    "SSID": "8786",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true,
+    "Sku": "N18E"
+  },
+  {
+    "SSID": "8787",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true,
+    "Sku": "N18E"
+  },
+  {
+    "SSID": "8788",
+    "AlwaysSupport": false,
+    "IsMaxFanSupported": true,
+    "Sku": "N18P"
+  },
+
+  // Valkyrie (Cezzane) - 21C1
+  {
+    "SSID": "88D1", // GN20-E3
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "88D2", // GN20-E5
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+
+  // Ralph
+  {
+    "SSID": "88F4", // GN20E (E3/E5) non DDS
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "88FD", // GN20E DDS (E5, TBC)
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "88F5", // GN20P (P0/P1)
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "88F6", // N18P (G61)
+    "AlwaysSupport": true,
+    "Sku": "N18P"
+  },
+  {
+    "SSID": "8A13", // 22C1 GN20E (E3/E6) non G sync
+    "AlwaysSupport": true,
+    "Sku": "ADL_N20E"
+  },
+  {
+    "SSID": "8A14", // 22C1 GN20E DDS (E3/E6)
+    "AlwaysSupport": true,
+    "Sku": "ADL_N20E"
+  },
+  {
+    "SSID": "8A15", // 22C1 GN20P (P0/P1)
+    "AlwaysSupport": true,
+    "Sku": "ADL_N20P"
+  },
+  {
+    "SSID": "8A16", // 22C1 N18P (G61)
+    "AlwaysSupport": true,
+    "Sku": "ADL_N18P"
+  },
+
+  // Cybug
+  {
+    "SSID": "88F7", // GN20E (E3/E5/E7) non DDS
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "88FE", // GN20E DDS (E7, TBC)
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "8A17", // 22C1 GN20E (E3/E6) non G sync
+    "AlwaysSupport": true,
+    "Sku": "ADL_N20E"
+  },
+  {
+    "SSID": "8A18", // 22C1 GN20E DDS (E8)
+    "AlwaysSupport": true,
+    "Sku": "ADL_N20E"
+  },
+  {
+    "SSID": "8A19", // 22C1 GN20E (E3/E6) non G sync (ADL-HX)
+    "AlwaysSupport": true,
+    "Sku": "ADLHX_N20E"
+  },
+  {
+    "SSID": "8A1A", // 22C1 GN20E DDS (E8) (ADL-HX)
+    "AlwaysSupport": true,
+    "Sku": "ADLHX_N20E"
+  },
+  {
+    "SSID": "8BAD", // 23C1 GN21 (X9/X11) (RPL-HX)
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N21X9X11"
+  },
+  {
+    "SSID": "8BB0", // 23C1 GN21 (X4/X6) (RPL-HX)
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N21X4X6"
+  },
+
+  // Vanellope
+  {
+    "SSID": "88FF", // 21C1, Cezanne-H, N18P-G61-A
+    "AlwaysSupport": true,
+    "Sku": "N18P"
+  },
+  {
+    "SSID": "8900", // 21C1, Cezanne-H, N20P
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8901", // 21C1, Cezanne-H, GN20-P1
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8902", // 21C1, Cezanne-H, R21M-E65-70	
+    "AlwaysSupport": true,
+    "Sku": "R21M"
+  },
+  {
+    "SSID": "8912", // 21C1, Cezanne-H, GN20-E5
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+
+  // Taffyta (Victus)
+  {
+    "SSID": "88EE",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "88EB",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "88EC",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "88ED",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8934",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8A21",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8A22",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+
+  // Calhoun (Victus)
+  {
+    "SSID": "88F8",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "88F9",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "88FA",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8A25", // 22C1 - GN20-E3
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8A26", // 22C1 - GN20-P1
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  {
+    "SSID": "8A27", // 22C1 - GN20-G61-A
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+
+  // Noctali (Victus)
+  {
+    "SSID": "89B5",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+  // NoctaliA (Victus)
+  {
+    "SSID": "89D8",
+    "AlwaysSupport": true,
+    "IsMaxFanSupported": true
+  },
+
+  // Hendricks
+  {
+    "SSID": "8A4C", // 22C1, GN20-E6/E3 DDS (Dynamic Display Switching)
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "8A4D", // 22C1, GN20-E6/E3 non-DDS (Dynamic Display Switching)
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "8A4E", // 22C1, GN20-P0/P1
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+
+  // Nolets
+  {
+    "SSID": "8A40", // 22C1, GN20P0
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8A41", // 22C1, GN20P1
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8A42", // 22C1, R22M-E65-75
+    "AlwaysSupport": true,
+    "Sku": "R22M"
+  },
+  {
+    "SSID": "8A43", // 22C1, GN20E3
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+  {
+    "SSID": "8A44", // 22C1, GN20E6
+    "AlwaysSupport": true,
+    "Sku": "N20E"
+  },
+
+  // Opihr
+  {
+    "SSID": "8A3C", // 22C1, GN20-P1
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8A3D", // 22C1, GN20-P0
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8A3E", // 22C1, N18P-G61-A
+    "AlwaysSupport": true,
+    "Sku": "N18P"
+  },
+  {
+    "SSID": "8A3F", // 22C1, R21M-P50-50
+    "AlwaysSupport": true,
+    "Sku": "R21M"
+  },
+  {
+    "SSID": "8C30", // 23C2
+    "AlwaysSupport": true
+  },
+
+  // Roku
+  {
+    "SSID": "8A4F", // 22C1
+    "AlwaysSupport": true,
+    "Sku": "N20P"
+  },
+  {
+    "SSID": "8A50", // 22C1
+    "AlwaysSupport": true,
+    "Sku": "N18P"
+  },
+  {
+    "SSID": "8BB2", // 23C1
+    "AlwaysSupport": true
+  },
+  {
+    "SSID": "8BC8", // 23C1
+    "AlwaysSupport": true
+  },
+  {
+    "SSID": "8BB1", // 23C1
+    "AlwaysSupport": true
+  },
+  {
+    "SSID": "8C2D", // 23C1
+    "AlwaysSupport": true
+  },
+  {
+    "SSID": "8C2E", // 23C1
+    "AlwaysSupport": true
+  },
+  {
+    "SSID": "8C3F", // 23C1
+    "AlwaysSupport": true
+  },
+  {
+    "SSID": "8C40", // 23C1
+    "AlwaysSupport": true
+  },
+
+  // Quaker
+  {
+    "SSID": "8BB3", // 23C1, Raptor lake HX(H55), non DDS
+    "AlwaysSupport": true,
+    "GetSkuByGpu": true
+  },
+  {
+    "SSID": "8BB4", // 23C1, Raptor lake HX(H55), DDS
+    "AlwaysSupport": true,
+    "GetSkuByGpu": true
+  },
+
+  // Brunobear
+  {
+    "SSID": "8BAA", // 23C1, Raptor lake HX(H55), GN20-P0-R
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N20P"
+  },
+  {
+    "SSID": "8BAB", // 23C1, Raptor lake HX(H55), GN21-X2/X4/X6
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N21X2X4X6"
+  },
+  {
+    "SSID": "8BAC", // 23C1, Raptor lake HX(H55), GN21-X9(Intel Only)
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N21X9"
+  },
+  {
+    "SSID": "8BA8", // 23C1, Raptor lake H(H45), GN20-P0-R
+    "AlwaysSupport": true,
+    "Sku": "RPLH_N20P"
+  },
+  {
+    "SSID": "8BA9", // 23C1, Raptor lake H(H45), GN21-X2/X4
+    "AlwaysSupport": true,
+    "Sku": "RPLH_N21X2X4"
+  },
+
+  // Thetiger
+  {
+    "SSID": "8BCD", // 23C1, AMD Phoenix DF R7/R5, GN21-X2/X4/X6
+    "AlwaysSupport": true,
+    "Sku": "PHXDF_N21X2X4X6"
+  },
+  {
+    "SSID": "8BCA", // 23C1, AMD Phoenix FF R9/R7/R5, GN21-X2/X4/X6
+    "AlwaysSupport": true,
+    "Sku": "PHXFF_N21X2X4X6"
+  },
+  {
+    "SSID": "8BCB", // 23C1, AMD Phoenix FF R7/R5, GN20-P0
+    "AlwaysSupport": true,
+    "Sku": "PHXFF_N20P"
+  },
+  {
+    "SSID": "8BCF", // 23C1, AMD Phoenix DF R7/R5, GN20-P0
+    "AlwaysSupport": true,
+    "Sku": "PHXDF_N20P"
+  },
+
+  // Roaree (Victus)
+  {
+    "SSID": "8BBD", // 23C1, Raptor lake H(H45), GN20-P0-R
+    "AlwaysSupport": true,
+    "Sku": "RPLH_N20P"
+  },
+  {
+    "SSID": "8BC1", // 23C1, Raptor lake HX(H55), GN20-P0-R
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N20P"
+  },
+  {
+    "SSID": "8BBE", // 23C1, Raptor lake H(H45), GN21-X2/X4/X6
+    "AlwaysSupport": true,
+    "Sku": "RPLH_N21X2X4X6"
+  },
+  {
+    "SSID": "8BC2", // 23C1, Raptor lake HX(H55), GN21-X2/X4/X6
+    "AlwaysSupport": true,
+    "Sku": "RPLHX_N21X2X4X6"
+  },
+
+  // Bigred (Victus)
+  {
+    "SSID": "8BD5", // 23C1, AMD Phoenix R5/R7, GN20-P0-R
+    "AlwaysSupport": true,
+    "Sku": "PHX_N20P"
+  },
+  {
+    "SSID": "8BD4", // 23C1, AMD Phoenix R5/R7, GN21-X2/X4/X6
+    "AlwaysSupport": true,
+    "Sku": "PHX_N21X2X4X6"
+  }
+]

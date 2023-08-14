@@ -1,0 +1,23 @@
+{  
+  "Version": "1.0",
+  "WorkingRatioPL1": 0.9,
+  "Decrease": 1,
+  "Increase": 5,
+  "PL1DeltaValue": 3,
+  "RecorderLong": 30,
+  "RecorderShort": 3,
+  "DtPL1UpperBound": 180,
+  "IntervalHeartbeat": 30000,
+  "IntervalAlgoLong": 30000,
+  "IntervalAlgoShort": 1000,
+  "PL1DefaultValueI5": 140,
+  "PL1DefaultValueI7": 150,
+  "PL1DefaultValueI9": 155,
+  "GpuSettings": {
+    "UsageThreshold": 30,
+    "DataCount": 5,
+    "UsageCount": 3,
+    "UsageGaming": 20,
+    "UsageVideo": 20
+  }
+}

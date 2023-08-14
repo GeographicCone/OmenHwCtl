@@ -1,0 +1,47 @@
+﻿[
+  {
+    "Type": "Mouse_DeathAdderElite",
+    "VID": [ "1532" ],
+    "PID": [ "005C" ]
+  },
+  {
+    "Type": "Mouse_DeathAdderV2",
+    "VID": [ "1532" ],
+    "PID": [ "0084" ]
+  },
+  {
+    "Type": "Mouse_MambaElite",
+    "VID": [ "1532" ],
+    "PID": [ "006C" ]
+  },
+  {
+    "Type": "Mouse_NagaTrinity",
+    "VID": [ "1532" ],
+    "PID": [ "0067" ]
+  },
+  {
+    "Type": "Mouse_BasiliskUltimateWire",
+    "VID": [ "1532" ],
+    "PID": [ "0086" ]
+  },
+  {
+    "Type": "Mouse_BasiliskUltimateWireless",
+    "VID": [ "1532" ],
+    "PID": [ "0088" ]
+  },
+  {
+    "Type": "Mouse_G203",
+    "VID": [ "046D" ],
+    "PID": [ "C084" ]
+  },
+  {
+    "Type": "Mouse_G403",
+    "VID": [ "046D" ],
+    "PID": [ "C083" ]
+  },
+  {
+    "Type": "Mouse_G502",
+    "VID": [ "046D" ],
+    "PID": [ "C08B" ]
+  }
+]

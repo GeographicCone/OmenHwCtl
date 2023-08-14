@@ -1,0 +1,129 @@
+[
+  // When multiple groups are available for selection, the first (Pid and Vid) group will be selected.
+  {
+    "Type": "Keyboard_Woodstock",
+    "VID": [ "03F0" ],
+    "PID": [ "1F41" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "KeyboardLighting", "KeyboardMacros" ],
+    "BackgroundFeature": [ "AccessoryKeyboardLightingBg", "AccessoryMacroBg" ]
+  },
+  {
+    "Type": "Keyboard_Woody2",
+    "VID": [ "03F0" ],
+    "PID": [ "3341" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "Woody2Lighting", "Woody2Macro" ],
+    "BackgroundFeature": [ "Woody2Bg" ]
+  },
+  {
+    "Type": "MousePad",
+    "VID": [ "03F0" ],
+    "PID": [ "2E41" ],
+    "InterfaceString": [ "mi_00" ],
+    "Feature": [ "MousePadLighting" ],
+    "BackgroundFeature": [ "AccessoryMousePadLightingBg" ]
+  },
+  {
+    "Type": "Mouse_Daisy",
+    "VID": [ "03F0" ],
+    "PID": [ "2041" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "MouseLighting", "MouseMacros", "MouseSetting" ],
+    "BackgroundFeature": [ "AccessoryMouseLightingBg", "AccessoryMacroBg" ]
+  },
+  {
+    "Type": "Mouse_McCree",
+    "VID": [ "03F0", "03F0" ],
+    "PID": [ "2D41", "2F41" ],
+    "InterfaceString": [ "mi_01", "mi_02" ],
+    "Feature": [ "McCreePower", "McCreeLighting", "McCreeMacro", "McCreeSetting" ],
+    "BackgroundFeature": [ "AccessoryMouseSettingBg" ]
+  },
+  {
+    "Type": "Mouse_Daffy2",
+    "VID": [ "03F0" ],
+    "PID": [ "3B41" ],
+    "InterfaceString": [ "mi_01" ],
+    "Feature": [ "Daffy2Lighting", "Daffy2Macro", "Daffy2Setting" ],
+    "BackgroundFeature": [ "MouseV3Bg" ]
+  },
+  {
+    "Type": "Mouse_Drake2",
+    "VID": [ "03F0" ],
+    "PID": [ "3A41" ],
+    "InterfaceString": [ "mi_01" ],
+    "Feature": [ "Drake2Lighting", "Drake2Macro", "Drake2Setting" ],
+    "BackgroundFeature": [ "MouseV3Bg" ]
+  },
+  {
+    "Type": "Mouse_Jolteon",
+    "VID": [ "03F0", "03F0" ],
+    "PID": [ "4441", "4E41" ],
+    "InterfaceString": [ "mi_01", "mi_02" ],
+    "Feature": [ "JolteonPower", "JolteonLighting", "JolteonMacro", "JolteonSetting" ],
+    "BackgroundFeature": [ "MouseV3Bg" ]
+  },
+  {
+    "Type": "Headset",
+    "VID": [ "03F0" ],
+    "PID": [ "2841" ],
+    "Feature": [ "HeadsetAudioLab", "HeadsetLighting", "Cooling" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ]
+  },
+  {
+    "Type": "Headset_Zazu",
+    "VID": [ "03F0" ],
+    "PID": [ "3241" ],
+    "Feature": [ "HeadsetZazuAudioLab", "HeadsetZazuLighting", "HeadsetZazuCooling", "HeadsetZazuSettings" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ]
+  },
+  {
+    "Type": "Headset_Sombra",
+    "VID": [ "03F0" ],
+    "PID": [ "3D41" ],
+    "Feature": [ "HeadsetSombraAudioLab" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ]
+  },
+  {
+    "Type": "Speaker_Viper",
+    "VID": [ "03F0" ],
+    "PID": [ "3E41" ],
+    "Feature": [ "SpeakerViperAudioLab" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ]
+  },
+  {
+    "Type": "Accelerator",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "Feature": [ "GraphicsSwitcher" ],
+    "BackgroundFeature": []
+  },
+  {
+    "Type": "Display_Kimura",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3612", "HPN3613", "HPN3614" ],
+    "ID_DP": [ "HPN3611" ],
+    "Feature": [ "DisplayLighting", "DisplayPerformance", "DisplayPicture" ],
+    "BackgroundFeature": []
+  },
+  {
+    "Type": "Display_Turbulence",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN360F", "HPN3610" ],
+    "ID_DP": [ "HPN360E" ],
+    "Feature": [ "TurbulenceLighting", "TurbulencePerformance", "TurbulencePicture" ],
+    "BackgroundFeature": []
+  },
+  {
+    "Type": "Display_Jawa",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3645" ],
+    "ID_DP": [ "HPN3644" ],
+    "Feature": [ "JawaDisplay", "JawaLighting", "JawaPicture" ],
+    "BackgroundFeature": []
+  }
+]

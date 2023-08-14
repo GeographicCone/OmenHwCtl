@@ -1,0 +1,16 @@
+[
+  {
+    "Type": "Turing",
+    "VEN": "10DE",
+    "DEV": "1E04", //134D for debug
+    "Feature": [ "TuringLighting" ],
+    "BackgroundFeature": [ "TuringBg" ]
+  },
+  {
+    "Type": "KingstonFury",
+    "VEN": "",
+    "DEV": "",
+    "Feature": [ "MemoryLighting" ],
+    "BackgroundFeature": [ "" ]
+  }
+]

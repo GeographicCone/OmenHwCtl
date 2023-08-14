@@ -1,0 +1,374 @@
+[
+  // When multiple groups are available for selection, the first (Pid and Vid) group will be selected.
+  {
+    "Type": "Keyboard_Woodstock",
+    "VID": [ "03F0" ],
+    "PID": [ "1F41" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "KeyboardLighting", "KeyboardMacros" ],
+    "BackgroundFeature": [ "AccessoryKeyboardLightingBg", "AccessoryMacroBg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Keyboard_Woody2",
+    "VID": [ "03F0" ],
+    "PID": [ "3341" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "Woody2Lighting", "Woody2Macro" ],
+    "BackgroundFeature": [ "KeyboardV3Bg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Keyboard_Winston",
+    "VID": [ "03F0", "03F0" ],
+    "PID": [ "3641", "5141" ],
+    "InterfaceString": [ "mi_02", "mi_02" ],
+    "Feature": [ "WinstonPower", "WinstonLighting", "WinstonMacro", "WinstonSetting" ],
+    "BackgroundFeature": [ "KeyboardV3Bg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "MousePad",
+    "VID": [ "03F0" ],
+    "PID": [ "2E41" ],
+    "InterfaceString": [ "mi_00" ],
+    "Feature": [ "MousePadLighting" ],
+    "BackgroundFeature": [ "AccessoryMousePadLightingBg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Mouse_Daisy",
+    "VID": [ "03F0" ],
+    "PID": [ "2041" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "MouseLighting", "MouseMacros", "MouseSetting" ],
+    "BackgroundFeature": [ "AccessoryMouseLightingBg", "AccessoryMacroBg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Mouse_McCree",
+    "VID": [ "03F0", "03F0" ],
+    "PID": [ "2D41", "2F41" ],
+    "InterfaceString": [ "mi_01", "mi_02" ],
+    "Feature": [ "McCreePower", "McCreeLighting", "McCreeMacro", "McCreeSetting" ],
+    "BackgroundFeature": [ "McCreeBg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Mouse_Daffy2",
+    "VID": [ "03F0" ],
+    "PID": [ "3B41" ],
+    "InterfaceString": [ "mi_01" ],
+    "Feature": [ "Daffy2Lighting", "Daffy2Macro", "Daffy2Setting" ],
+    "BackgroundFeature": [ "MouseV3Bg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Mouse_Drake2",
+    "VID": [ "03F0" ],
+    "PID": [ "3A41" ],
+    "InterfaceString": [ "mi_01" ],
+    "Feature": [ "Drake2Lighting", "Drake2Macro", "Drake2Setting" ],
+    "BackgroundFeature": [ "MouseV3Bg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Mouse_Jolteon",
+    "VID": [ "03F0", "03F0" ],
+    "PID": [ "4441", "4E41" ],
+    "InterfaceString": [ "mi_01", "mi_02" ],
+    "Feature": [ "JolteonPower", "JolteonLighting", "JolteonMacro", "JolteonSetting" ],
+    "BackgroundFeature": [ "MouseV3Bg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Headset",
+    "VID": [ "03F0" ],
+    "PID": [ "2841" ],
+    "Feature": [ "HeadsetAudioLab", "HeadsetLighting", "Cooling" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ],
+    "DeviceEventType": "AUDIO"
+  },
+  {
+    "Type": "Headset_Zazu",
+    "VID": [ "03F0" ],
+    "PID": [ "3241" ],
+    "Feature": [ "HeadsetZazuAudioLab", "HeadsetZazuLighting", "HeadsetZazuCooling", "HeadsetZazuSettings" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ],
+    "DeviceEventType": "AUDIO"
+  },
+  {
+    "Type": "Headset_Sombra",
+    "VID": [ "03F0" ],
+    "PID": [ "3D41" ],
+    "Feature": [ "HeadsetSombraAudioLab" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ],
+    "DeviceEventType": "AUDIO"
+  },
+  {
+    "Type": "Headset_Foghorn",
+    "VID": [ "03F0" ],
+    "PID": [ "4941" ],
+    "Feature": [ "HeadsetFoghornAudioLab" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ],
+    "DeviceEventType": "AUDIO"
+  },
+  {
+    "Type": "Headset_Pharah",
+    "VID": [ "03F0" ],
+    "PID": [ "3541" ],
+    "InterfaceString": [ "mi_03" ],
+    "Feature": [ "HeadsetPharahPower", "HeadsetPharahAudioLab", "HeadsetPharahLighting", "HeadsetPharahSettings" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Speaker_Viper",
+    "VID": [ "03F0" ],
+    "PID": [ "3E41" ],
+    "InterfaceString": [ "mi_02" ],
+    "Feature": [ "SpeakerViperAudioLab", "SpeakerViperLighting" ],
+    "BackgroundFeature": [ "AccessoryHeadSetBg" ],
+    "DeviceEventType": "AUDIO"
+  },
+  {
+    "Type": "Accelerator",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "Feature": [ "GraphicsSwitcher" ],
+    "BackgroundFeature": []
+  },
+  {
+    "Type": "Display_Kimura",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3612", "HPN3613", "HPN3614" ],
+    "ID_DP": [ "HPN3611" ],
+    "Feature": [ "DisplayLighting", "DisplayPerformance", "DisplayPicture" ],
+    "BackgroundFeature": []
+  },
+  {
+    "Type": "Display_Turbulence",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN360F", "HPN3610" ],
+    "ID_DP": [ "HPN360E" ],
+    "Feature": [ "TurbulenceLighting", "TurbulencePerformance", "TurbulencePicture" ],
+    "BackgroundFeature": []
+  },
+  {
+    "Type": "Display_Jawa",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3645" ],
+    "ID_DP": [ "HPN3644" ],
+    "Feature": [ "JawaPicture", "JawaLighting", "JawaDisplay" ],
+    "BackgroundFeature": [ "JawaBg" ]
+  },
+  {
+    "Type": "Display_Ewok",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3674", "HPN378A" ],
+    "ID_DP": [ "HPN3673", "HPN3789" ],
+    "Feature": [ "EwokPicture", "EwokLighting", "EwokDisplay" ],
+    "BackgroundFeature": [ "EwokBg" ]
+  },
+  {
+    "Type": "Display_Cirrus",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN36B8" ],
+    "ID_DP": [ "HPN36B7" ],
+    "Feature": [ "CirrusDisplay", "CirrusPicture" ],
+    "BackgroundFeature": [ "CirrusBg" ]
+  },
+  {
+    "Type": "Display_Rath",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN36DA" ],
+    "ID_DP": [ "HPN36D9" ],
+    "Feature": [ "RathPicture", "RathDisplay" ],
+    "BackgroundFeature": [ "RathBg" ]
+  },
+  {
+    "Type": "Display_Hypno",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN36FE" ],
+    "ID_DP": [ "HPN36FC" ],
+    "Feature": [ "HypnoPicture", "HypnoSettings", "HypnoOverlay" ],
+    "BackgroundFeature": [ "HypnoBg" ]
+  },
+  {
+    "Type": "Display_Redd",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3723", "HPN375A" ],
+    "ID_DP": [ "HPN3722", "HPN3759" ],
+    "Feature": [ "ReddPicture", "ReddSettings", "ReddOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_Nook",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3725", "HPN375C" ],
+    "ID_DP": [ "HPN3724", "HPN375B" ],
+    "Feature": [ "NookPicture", "NookSettings", "NookOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_KKSlider",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3727", "HPN3763" ],
+    "ID_DP": [ "HPN3726", "HPN3762" ],
+    "Feature": [ "KKSliderPicture", "KKSliderSettings", "KKSliderOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_Gulliver",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3729", "HPN3767" ],
+    "ID_DP": [ "HPN3728", "HPN3766" ],
+    "Feature": [ "GulliverPicture", "GulliverSettings", "GulliverOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_Isabelle",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3734", "HPN375F" ],
+    "ID_DP": [ "HPN3733", "HPN375E" ],
+    "Feature": [ "IsabellePicture", "IsabelleSettings", "IsabelleOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_Blathers",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3736", "HPN3761" ],
+    "ID_DP": [ "HPN3735", "HPN3760" ],
+    "Feature": [ "BlathersPicture", "BlathersSettings", "BlathersOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_Resetti",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3738", "HPN3765" ],
+    "ID_DP": [ "HPN3737", "HPN3764" ],
+    "Feature": [ "ResettiPicture", "ResettiSettings", "ResettiOverlay" ],
+    "BackgroundFeature": [ "VillagerBg" ]
+  },
+  {
+    "Type": "Display_Jynx",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN373B" ],
+    "ID_DP": [ "HPN373A" ],
+    "Feature": [ "JynxPicture", "JynxSettings", "JynxOverlay" ],
+    "BackgroundFeature": [ "JynxBg" ]
+  },
+  {
+    "Type": "Display_Mew",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN374E", "HPN374F" ],
+    "ID_DP": [ "HPN374C" ],
+    "Feature": [ "MewPicture", "MewLighting", "MewSettings", "MewOverlay" ],
+    "BackgroundFeature": [ "MewBg" ]
+  },
+  {
+    "Type": "Chassis_Articuno",
+    "VID": [ "103C" ],
+    "PID": [ "84FD" ],
+    "Feature": [ "ArticunoChassisLighting" ],
+    "BackgroundFeature": [ "ArticunoLightingBg" ],
+    "DeviceEventType": "HID"
+  },
+  {
+    "Type": "Display_Raiden",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3938", "HPN393B", "HPN3939", "HPN393C" ],
+    "ID_DP": [ "HPN3937", "HPN393A" ],
+    "Feature": [ "RaidenPicture", "RaidenSettings", "RaidenOverlay" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Spyro",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN393F", "HPN3942", "HPN3940", "HPN3943" ],
+    "ID_DP": [ "HPN393E", "HPN3941" ],
+    "Feature": [ "SpyroPicture", "SpyroSettings", "SpyroOverlay" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_PaRappa",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3945", "HPN3948", "HPN3946", "HPN3949" ],
+    "ID_DP": [ "HPN3944", "HPN3947" ],
+    "Feature": [ "PaRappaPicture", "PaRappaSettings", "PaRappaOverlay" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Ratchet",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN394B", "HPN394F", "HPN394C", "HPN3950" ],
+    "ID_DP": [ "HPN394A", "HPN394E" ],
+    "Feature": [ "RatchetPicture", "RatchetSettings", "RatchetOverlay" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Clank",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3952", "HPN3955", "HPN3953", "HPN3956" ],
+    "ID_DP": [ "HPN3951", "HPN3954" ],
+    "Feature": [ "ClankPicture", "ClankSettings", "ClankOverlay" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Drake",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3958", "HPN395B", "HPN3959", "HPN395C" ],
+    "ID_DP": [ "HPN3957", "HPN395A" ],
+    "Feature": [ "DrakePicture", "DrakeSettings", "DrakeOverlay", "DrakeAudio" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Crash",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN395F", "HPN3962", "HPN3960", "HPN3963" ],
+    "ID_DP": [ "HPN395E", "HPN3961" ],
+    "Feature": [ "CrashPicture", "CrashLighting", "CrashSettings", "CrashOverlay", "CrashAudio" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Spike",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN3965", "HPN3968", "HPN3966", "HPN3969" ],
+    "ID_DP": [ "HPN3964", "HPN3967" ],
+    "Feature": [ "SpikePicture", "SpikeLighting", "SpikeSettings", "SpikeOverlay", "SpikeAudio" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  },
+  {
+    "Type": "Display_Sly",
+    "VID": [ "unknown" ],
+    "PID": [ "unknown" ],
+    "ID_HDMI": [ "HPN396C", "HPN3971", "HPN396E", "HPN3972" ],
+    "ID_DP": [ "HPN396B", "HPN3970", "HPN396A", "HPN396F" ],
+    "Feature": [ "SlyPicture", "SlyLighting", "SlySettings", "SlyOverlay", "SlyAudio" ],
+    "BackgroundFeature": [ "AllStarsBg" ]
+  }
+]

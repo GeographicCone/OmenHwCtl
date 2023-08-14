@@ -1,0 +1,39 @@
+{
+  "Version": "1.0",
+  "IntervalHeartbeat": 30000,
+  "CpuOverheatThreshold": 90,
+  "GpuOverheatThreshold": 90,
+  "AmbientOverheatThreshold": 70,
+  "DtSwFanControlCustomFanCurveAcsCPU": {
+    "FanTable": [ 20, 20, 20, 25, 30, 35, 40, 45, 55 ],
+    "TemperatureTable": [ 50, 55, 60, 65, 70, 75, 80, 85, 90 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 20, 20, 20, 25, 30, 35, 40, 45, 55 ],
+    "Lamda_Increase": 0.1,
+    "Lamda_Decrease": 0.1
+  },
+  "DtSwFanControlCustomFanCurveLcsCPU": {
+    "FanTable": [ 10, 10, 10, 20, 20, 25, 30, 35, 40 ],
+    "TemperatureTable": [ 50, 55, 60, 65, 70, 75, 80, 85, 90 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 10, 10, 10, 20, 20, 25, 30, 35, 40 ],
+    "Lamda_Increase": 0.1,
+    "Lamda_Decrease": 0.1
+  },
+  "DtSwFanControlCustomFanCurveIntake": {
+    "FanTable": [ 20, 20, 25, 25, 30, 40, 45, 60, 60 ],
+    "TemperatureTable": [ 30, 35, 40, 45, 50, 55, 60, 65, 70 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 20, 20, 20, 20, 25, 25, 30, 30, 30 ],
+    "Lamda_Increase": 1,
+    "Lamda_Decrease": 1
+  },
+  "DtSwFanControlCustomFanCurveExhaust": {
+    "FanTable": [ 20, 25, 30, 40, 55, 70, 70, 70, 70 ],
+    "TemperatureTable": [ 30, 35, 40, 45, 50, 55, 60, 65, 70 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 20, 20, 25, 25, 30, 30, 35, 40, 40 ],
+    "Lamda_Increase": 1,
+    "Lamda_Decrease": 1
+  }
+}

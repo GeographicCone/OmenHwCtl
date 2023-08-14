@@ -1,0 +1,28 @@
+{
+  "PlatformDataList": [
+    // starmade 21C1 GN20
+    {
+      "Platform": "88C8",
+      "BiosVersion": "F.99"
+    },
+    {
+      "Platform": "88C8",
+      "BiosVersion": "B.99"
+    },
+
+    // starmade 21C1 TGL
+    {
+      "Platform": "88CB",
+      "BiosVersion": "F.99"
+    },
+    {
+      "Platform": "88CB",
+      "BiosVersion": "B.99"
+    },
+    // Ralph 22C1
+    {
+      "Platform": "8A14",
+      "BiosVersion": "B.06"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{  
+  "Version": "1.0",
+  "WorkingRatioPL1": 0.9,
+  "Decrease": 0.5,
+  "Increase": 5,
+  "PL1DeltaValue": 3,
+  "RecorderLong": 30,
+  "RecorderShort": 3,
+  "NbPL1LowerBoundMaxQ": 35,
+  "NbPL1LowerBoundMaxP": 45,
+  "IntervalHeartbeat": 90000,
+  "IntervalAlgoLong": 30000,
+  "IntervalAlgoShort": 1000,
+  "PL1DefaultValueI5": 45,
+  "NbPL1UpperBound": 45,
+  "IrSensorThreshold": 61,
+  "IrSensorThresholdDefault": 90,
+  "temperatureThrottlingBalance": 90,
+  "temperatureThrottlingPerformance": 95,
+  "GpuSettings": {
+    "UsageThreshold": 30,
+    "DataCount": 5,
+    "UsageCount": 3,
+    "UsageGaming": 20,
+    "UsageVideo": 20
+  }
+}

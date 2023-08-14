@@ -1,0 +1,36 @@
+{  
+  "Version": "1.0",
+  "IntervalHeartbeat": 30000,
+  "DtSwFanControlCustomFanCurveAcsCPU": {
+    "FanTable": [ 20, 20, 20, 20, 30, 30, 35, 40, 55 ],
+    "TemperatureTable": [ 50, 55, 60, 65, 70, 75, 80, 85, 90 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 20, 20, 20, 20, 20, 25, 30, 30, 40 ],
+    "Lamda_Increase": 0.1,
+    "Lamda_Decrease": 0.1
+  },
+  "DtSwFanControlCustomFanCurveLcsCPU": {
+    "FanTable": [ 15, 15, 20, 20, 25, 25, 25, 30, 45 ],
+    "TemperatureTable": [ 50, 55, 60, 65, 70, 75, 80, 85, 90 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 15, 15, 15, 15, 15, 15, 20, 20, 40 ],
+    "Lamda_Increase": 0.1,
+    "Lamda_Decrease": 0.1
+  },
+  "DtSwFanControlCustomFanCurveIntake": {
+    "FanTable": [ 30, 30, 30, 40, 40, 50, 60, 70, 70 ],
+    "TemperatureTable": [ 30, 35, 40, 45, 50, 55, 60, 65, 70 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 25, 25, 25, 25, 40, 40, 50, 60, 60 ],
+    "Lamda_Increase": 1,
+    "Lamda_Decrease": 1
+  },
+  "DtSwFanControlCustomFanCurveExhaust": {
+    "FanTable": [ 30, 30, 30, 45, 60, 65, 70, 80, 80 ],
+    "TemperatureTable": [ 30, 35, 40, 45, 50, 55, 60, 65, 70 ],
+    "UpperBound": [ 100, 100, 100, 100, 100, 100, 100, 100, 100 ],
+    "LowerBound": [ 30, 30, 30, 35, 50, 50, 60, 70, 70 ],
+    "Lamda_Increase": 1,
+    "Lamda_Decrease": 1
+  }
+}

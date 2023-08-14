@@ -1,0 +1,85 @@
+{  
+  "Version": "1.0",
+  "WorkingRatioPL1": 0.9,
+  "Decrease": 0.5,
+  "Increase": 5,
+  "PL1DeltaValue": 3,
+  "RecorderLong": 30,
+  "RecorderShort": 3,
+  "NbPL1LowerBoundMaxQ": 25,
+  "NbPL1LowerBoundMaxP": 25,
+  "NbPL1LowerBoundL0": 23,
+  "NbPL1LowerBoundL1": 30,
+  "IntervalHeartbeat": 30000,
+  "IntervalAlgoLong": 30000,
+  "IntervalAlgoShort": 1000,
+  "PL1DefaultValue": 45,
+  "NbPL1UpperBound": 45,
+  "NbPL1UpperBoundDefault": 54,
+  "NbPL1UpperBoundPerformance": 65,
+  "NbPL1UpperBoundPerformanceWithOC": 100,
+  "NbPL1UpperBoundGaming": 100,
+  "IrSensorThreshold": 55,
+  "IrSensorThresholdDefault": 48,
+  "IrSensorThresholdN18E": [ 48, 48, 49, 48, 45, 49, 49, 49 ],
+  "IrSensorThresholdN18P": [ 50, 49, 52, 48, 46, 53, 53, 53 ],
+  "IrOverheatThreshold": [ 43, 49, 53, 50, 46, 53, 53, 51 ],
+  "IrGpsThreshold": [ 42, 45, 51, 47, 44, 50, 51, 50 ],
+  "IrPl1Threshold": [ 40, 41, 47, 45, 41, 47, 47, 47 ],
+  "IrReleaseThreshold": [ 34, 38, 45, 43, 37, 45, 45, 45 ],
+  "NbPL1LowerBound": [ 25, 25, 25, 25, 25, 35, 35, 35 ],
+  "temperatureThrottlingBalance": 90,
+  "temperatureThrottlingPerformance": 95,
+  "PL4_Threshold": 110,
+  "GpuSettings": {
+    "UsageThreshold": 30,
+    "DataCount": 5,
+    "UsageCount": 3,
+    "UsageGaming": 20,
+    "UsageVideo": 20
+  },
+  "SwFanControlCustomDefault": {
+    "FanTable": {
+      "Fan_Table_CPU_Temperature_List": [ 40, 46, 50, 54, 71, 73, 75, 77, 83 ],
+      "Fan_Table_CPU_Fan_Speed_List": [ 0, 21, 24, 26, 29, 31, 33, 38, 41 ],
+      "Fan_Table_GPU_Temperature_List": [ 51, 55, 57, 59, 61, 63, 65, 67, 71 ],
+      "Fan_Table_GPU_Fan_Speed_List": [ 0, 21, 24, 26, 29, 31, 33, 38, 41 ],
+      "Fan_Table_IR_Temperature_List": [ 33, 35, 37, 38, 39, 41, 42, 43, 45 ],
+      "Fan_Table_IR_Fan_Speed_List": [ 0, 21, 24, 26, 29, 31, 33, 38, 41 ]
+    },
+    "Lamda_Increase": 0.05,
+    "Lamda_Decrease": 0.7
+  },
+  "SwFanControlCustomPerformance": {
+    "FanTable": {
+      "Fan_Table_CPU_Temperature_List": [ 50, 55, 60, 68, 70, 76, 80, 82, 86 ],
+      "Fan_Table_CPU_Fan_Speed_List": [ 21, 24, 29, 31, 33, 38, 41, 46, 47 ],
+      "Fan_Table_GPU_Temperature_List": [ 51, 55, 60, 64, 68, 72, 74, 76, 82 ],
+      "Fan_Table_GPU_Fan_Speed_List": [ 21, 24, 29, 31, 33, 38, 41, 46, 47 ],
+      "Fan_Table_IR_Temperature_List": [ 33, 35, 37, 39, 41, 43, 44, 45, 47 ],
+      "Fan_Table_IR_Fan_Speed_List": [ 21, 24, 29, 31, 33, 38, 41, 46, 47 ]
+    },
+    "Lamda_Increase": 0.07,
+    "Lamda_Decrease": 0.05
+  },
+  "SwFanControlCustomFanCurve": {
+    "FanTable": {
+      "Fan_Table_CPU_Temperature_List": [ 50, 55, 60, 65, 70, 75, 80, 85, 90 ],
+      "Fan_Table_CPU_Fan_Speed_List": [ 18, 26, 26, 26, 29, 33, 38, 41, 41 ],
+      "Fan_Table_GPU_Temperature_List": [ 50, 55, 60, 65, 70, 75, 80, 85, 90 ],
+      "Fan_Table_GPU_Fan_Speed_List": [ 0, 0, 0, 0, 0, 0, 0, 41, 41 ],
+      "Fan_Table_IR_Temperature_List": [ 40, 50 ],
+      "Fan_Table_IR_Fan_Speed_List": [ 0, 41 ]
+    },
+    "Boundary": {
+      "CPU_Fan_Speed_Upper_Bound_List": [ 48, 48, 48, 48, 48, 48, 48, 48, 48 ],
+      "CPU_Fan_Speed_Lower_Bound_List": [ 15, 15, 15, 15, 15, 21, 25, 27, 27 ],
+      "GPU_Fan_Speed_Upper_Bound_List": [ 48, 48, 48, 48, 48, 48, 48, 48, 48 ],
+      "GPU_Fan_Speed_Lower_Bound_List": [ 15, 15, 15, 15, 21, 21, 27, 27, 27 ],
+      "IR_Fan_Speed_Upper_Bound_List": [ 48 ],
+      "IR_Fan_Speed_Lower_Bound_List": [ 0 ]
+    },
+    "Lamda_Increase": 0.1,
+    "Lamda_Decrease": 0.1
+  }
+}
