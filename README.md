@@ -1,6 +1,6 @@
 # OmenHwCtl: HP Omen Hardware Control
 
-Version: 2023-08-14
+Version: 2023-08-15
 
 ## What It Does
 
@@ -92,8 +92,9 @@ Where the parameters are:
 
 * `-MaxGpuPower` makes the GPU run at maximum power, enabling custom TGP (cTGP) and PPAB - the original reason why this script was written
 * `-SetColor4 00FF00:00FF00:0080FF:FFFFFFF` sets right and middle zones to green, left to sky blue, and the WASD keys to white
-* `-SetCpuPower 45 -SetCpuPowerMax 215` sets PL1 to 45W and PL4 to 215W (multiple operations can be performed in one go)
-* `-OmenKeyOn` sets up a custom WMI event filter so that the task "Omen Key" will run whenever the Omen Key is pressed
+* `-GetTemp -GetFanLevel` reports temperature and current fan speed (multiple operations can be performed in one go)
+* `-SetFanMode 49 -SetFanLevel 37:39` sets fan mode to Performance and fan speeds to 5,500 and 5,700 rpm respectively for the next 2 minutes, at which point they will revert to the automatic defaults
+* `-OmenKeyOn` sets up a custom WMI event filter so that the task "Omen Key" will run whenever the Omen Key is pressed (this only has to be done once, as it persists across reboots; to remove, use `-OmenKeyOff`)
 
 #### Notes
 
@@ -137,7 +138,7 @@ Tested to work on my **HP Omen 16-b1xxx (2022)** (Intel/nVidia version), where i
 
 For reference, with a 3070Ti, the default TGP is 105W, goes up to 115W when set to highest, and drops down to 80W when set to lowest (or after hibernation, if not set manually, due to the aforementioned bug). The default PL1 is 45W, and PL4 is 215W.
 
-Please feel free to report compatibility with other devices in the relevant issue.
+The script reproduces the entire scope of WMI calls made by the Omen Gaming Hub. Not all operations will work with all hardware. Please report compatibility [in the relevant issue](https://github.com/GeographicCone/OmenHwCtl/issues/1).
 
 ## More to Know
 
@@ -145,7 +146,7 @@ Please feel free to report compatibility with other devices in the relevant issu
 
 #### How to Send Data
 
-The script uses PowerShell's [CimCmdlets](https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/) to access the WMI interface exposed by the HP BIOS. It is short and should be self-explanatory. Please just have a look at the source.
+The script uses PowerShell's [CimCmdlets](https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/) to access the WMI interface exposed by the HP BIOS. It is short and should be self-explanatory. Please just have a look at the source, there are extensive comments inline.
 
 The main function can be used to send any data to the BIOS:
 
