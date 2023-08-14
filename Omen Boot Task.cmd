@@ -12,4 +12,4 @@ rem to ensure the task runs even if on battery power
 schtasks /create /tn "Omen Boot" /xml "%task_xml_data%"
 
 rem Otherwise, the task of creating a task would have been much more straightforward:
-rem schtasks /create /sc ONSTART /tn "Maximum GPU Power" /tr "%task_filename%" /ru System /f
+rem schtasks /create /sc ONSTART /tn "Omen Boot" /tr "%task_filename%" /ru System /f
