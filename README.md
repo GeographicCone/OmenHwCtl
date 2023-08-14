@@ -196,6 +196,7 @@ Further, the goal is to keep the replacement as compact as possible, and readily
 
 #### Reading
 
+* Check out the [Reference](https://github.com/GeographicCone/OmenHwCtl/tree/master/Reference) directory in this repository for some hopefully useful information
 * [Reverse Engineering HP Omen 15 Keyboard Driver: Part 2 - Decompiling .NET applications](https://dev.to/rishit/reverse-engineering-keyboard-driver-part-2-decompiling-net-applications-44l2)
 * [Omen Hub Light: Feature Discussion](https://github.com/determ1ne/OmenHubLight/issues/1) (closed GitHub issue)
 
