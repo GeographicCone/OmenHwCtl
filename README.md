@@ -1,6 +1,6 @@
 # OmenHwCtl: HP Omen Hardware Control
 
-Version: 2023-08-15
+Version: 2023-08-17
 
 ## What It Does
 
