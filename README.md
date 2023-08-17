@@ -1,6 +1,6 @@
 # OmenHwCtl: HP Omen Hardware Control
 
-Version: 2023-08-17
+Version: 2023-08-18
 
 ## What It Does
 
@@ -46,7 +46,7 @@ OmenHwCtl
  [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]
  [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <0x00-0xFF>] [-SetFanTable <00-FF>+ (# < 128)]
  [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]
- [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]
+ [-MuxFix] [-MuxFixOff|-MuxFixOn] [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]
 ````
 
 ![OmenHwCtl Screenshot (from an older version)](https://raw.githubusercontent.com/GeographicCone/OmenHwCtl/master/OmenHwCtl.png)
@@ -75,6 +75,9 @@ Where the parameters are:
 * `-GetThermalThrottlingStatus` Check if system is currently thermal throttling
 * `-MaxFanSpeedOff` and `-MaxFanSpeedOn` Disable or enable maximum fan speed mode
 * `-MaxGpuPower` and `-MinGpuPower` Adjust Total Graphics Power (TGP) by enabling or disabling custom TGP (cTGP) and PPAB
+* `-MuxFix` Apply a fix for screen stutter and color profile not applied in Advanced Optimus discrete GPU-only mode (generally supposed to be run from the task)
+* `-MuxFixOff` Remove the WMI event filter to apply Advanced Optimus fix whenever discrete GPU-only mode is set
+* `-MuxFixOn` Set a task to run whenever DGPU-only mode is enabled to fix screen stuttering and color profile not being applied (see [Omen Mux Task.cmd](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Mux%20Task.cmd) and [.xml](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Mux%20Task.xml))
 * `-OmenKeyOff` Remove the WMI event filter triggering a task whenever the Omen Key is pressed
 * `-OmenKeyOn` Run a custom task whenever the Omen Key is pressed (see [Omen Key Task.cmd](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Key%20Task.cmd) and [.xml](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Key%20Task.xml))
 * `-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)` Set backlight color for a 4-zone keyboard
@@ -106,17 +109,25 @@ There is currently no parameter validation. It's on you to make sure the values 
 
 The script has to run as an administrator.
 
-To use the Omen Key, run `Omen Key Task.cmd` (as an administrator) to add a task that will run whenever the Omen Key is pressed. You might want to edit the `Omen Key Task.xml` file beforehand: by default it just runs _Notepad_.
+### Scheduled Tasks
 
-### Scheduled Task
+#### Applying the Settings on Boot
 
 The settings need to be reapplied after a system reboot or shutdown. Thus, for further convenience, a script is provided to add a scheduled task that will run on every startup, setting the Total Graphics Power (TGP) to the maximum.
 
-To install the task, run the script `Maximum GPU Power Task.cmd` as an administrator. `OmenHwCtl.{cmd,ps1}` will be copied to the Windows system folder `%SystemRoot%\System32`, and a task will be installed to run `OmenHwCtl.cmd -MaxGpuPower -Silent` upon every startup as per the `Maximum GPU Power Task.xml` file.
+To install the task, run the script `Omen Boot Task.cmd` as an administrator. `OmenHwCtl.{cmd,ps1}` will be copied to the Windows system folder `%SystemRoot%\System32`, and a task will be installed to run `OmenHwCtl.cmd -MaxGpuPower -Silent` upon every startup as per the `Omen Boot Task.xml` file.
 
 Once installed, the task will be visible in the _Task Scheduler_ (`Win-R`, type: `mmc taskschd.msc`, `Enter`). It can be further edited or deleted from there.
 
 <ins>Note</ins>: The XML file to set up the task is required to ensure that the task runs even if the system is booted when on battery power. This is not possible if adding a task with only the command-line options of `schtasks.exe`.
+
+#### Omen Key Action
+
+To use the Omen Key, run `Omen Key Task.cmd` (as an administrator) to add a task that will run whenever the Omen Key is pressed. You might want to edit the `Omen Key Task.xml` file beforehand: by default it is set to power the screen (and keyboard backlight) off while the laptop keeps running.
+
+#### Workaround Advanced Optimus Screen Stutter
+
+Yet another task has the purpose of triggering a screen refresh rate change when switching to discrete GPU-only mode in Advanced Optimus to workaround a bug that causes the screen to stutter in said mode. It also resolves another bug where the existing color profile is not applied to the newly-enabled screen. To install, run `Omen Mux Task.cmd` as an administrator. If you do not suffer from these issues (which might be Windows version-dependent), there is no need to use this feature.
 
 ## What It Needs to Work
 
