@@ -7,7 +7,7 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-15'
+$MyVersion = '2023-08-17'
 
 # Start a CIM session
 $Session = New-CimSession -Name 'hpq' -SkipTestConnection
@@ -81,7 +81,7 @@ Function Send-OmenBiosWmi {
 
             # Provide a description for known error codes
             0x03 { ' - Command Not Available' }
-            0x05 { ' - Output Size Too Small' }
+            0x05 { ' - Input or Output Size Too Small' }
         } ))
     }
 }
@@ -174,9 +174,10 @@ ForEach($Arg in $Args) {
             # (3) These are then added to the fan list
         }
         '-GetGfxMode' {
-            Write-Information 'Get Graphics Mode'
+            Write-Information 'Get Graphics Mode (Legacy)'
             Send-OmenBiosWmi -Command 0x01 -CommandType 0x52 -OutputSize 4
             # Byte #0: 0x00 - Hybrid, 0x01 - Discrete, 0x02 - Optimus
+            # Legacy devices only; for newer ones, see -GetSysDesignData Byte #7 Bit #3
         }
         '-GetGpuStatus' {
             Write-Information 'Get GPU Status'
@@ -225,12 +226,13 @@ ForEach($Arg in $Args) {
             #                   >= 0x01 0x18 = 0b100011000 - TGP PPAB Enabled
             #                   >= 0x00 0xC8 = 0b011001000 - BIOS Performance Mode Enabled
             # Byte #2: 0x01 - Thermal Policy Version
-            # Byte #4 Bit 0: Software Fan Control Support
-            # Byte #4 Bit 1: Extreme Mode Support
-            # Byte #4 Bit 2: Extreme Mode Unlocked
+            # Byte #4 Bit #0: Software Fan Control Support
+            # Byte #4 Bit #1: Extreme Mode Support
+            # Byte #4 Bit #2: Extreme Mode Unlocked
             # Byte #5: 0xD7 == 215 [W] - Default Power Limit 4 Value
             # Byte #6: 0x01 - BIOS-Defined Overclocking Support
-            # Byte #7: 0x0c
+            # Byte #7: 0x0C
+            # Byte #7 Bit #3: Graphics Switcher Supported
             # Byte #8: 0x00 - Default Concurrent TDP (Cybug 23C1)
         }
         '-GetTemp' {
@@ -379,6 +381,13 @@ ForEach($Arg in $Args) {
             Send-OmenBiosWmi -CommandType 0x32 -Data $FanTable
             # Note: This appears to be a desktop-only functionality
         }
+        '-SetGfxMode' {
+            $Value = [Byte] $Args[$NextArg]
+            Write-Information $('Set Graphics Mode to: ' + $Value)
+            Send-OmenBiosWmi -Command 0x02 -CommandType 0x52 -Data @($Value,0x00,0x00,0x00)
+            # Byte #0: 0x00 - Hybrid, 0x01 - Discrete, 0x02 - Optimus
+            # This is not Advanced Optimus, the settings take effect following a reboot
+        }
         '-SetIdleOff' {
             Write-Information 'Set Idle Off'
             Send-OmenBiosWmi -CommandType 0x31 -Data @(0x00, 0x00, 0x00, 0x00) -OutputSize 4
@@ -417,7 +426,7 @@ if(!$OperationAttempted) {
 ' [-GetBiosUndervoltSupport] [-GetMemOcSupport] [-SetMemXmp] [-OmenKeyOff|-OmenKeyOn]'`r`n `
 ' [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]'`r`n `
 ' [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]'`r`n `
-' [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <00-FF>] [-SetFanTable <00-FF>+ (# < 128)]'`r`n `
+' [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <0x00-0xFF>] [-SetFanTable <00-FF>+ (# < 128)]'`r`n `
 ' [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]'`r`n `
-' [-SetLedAnim] [-Silent]'
+' [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]'
 }
