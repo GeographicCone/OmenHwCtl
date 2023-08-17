@@ -251,3 +251,12 @@ namespace HP.Omen.Core.Common.PowerControl {
         Quiet_Normal_Turbo,
     }
 }
+
+// Graphics Switcher Mode
+namespace HP.Omen.Core.Model.DataStructure.Modules.GraphicsSwitcher.Enums {
+    public enum GraphicsSwitcherMode {
+        Hybrid,
+        Discrete,
+        Optimus,
+    }
+}
