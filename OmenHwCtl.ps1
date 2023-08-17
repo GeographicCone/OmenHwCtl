@@ -7,7 +7,7 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-17'
+$MyVersion = '2023-08-18'
 
 # Start a CIM session
 $Session = New-CimSession -Name 'hpq' -SkipTestConnection
@@ -40,14 +40,14 @@ Function Send-OmenBiosWmi {
     Set-Variable -Name OperationAttempted -Scope Global -Value $True
 
     # Prepare the request, whether with or without data to be sent
-    if($Data -eq $Null) {
+    If($Data -eq $Null) {
         $BiosDataIn = New-CimInstance -ClassName 'hpqBDataIn' -ClientOnly -Namespace 'root\wmi' -Property @{
             Command = $Command;
             CommandType = $CommandType;
             Size = [UInt32] 0;
             Sign = $Sign;
         }
-    } else {
+    } Else {
         $BiosDataIn = New-CimInstance -ClassName 'hpqBDataIn' -ClientOnly -Namespace 'root\wmi' -Property @{
             Command = $Command;
             CommandType = $CommandType;
@@ -64,19 +64,19 @@ Function Send-OmenBiosWmi {
     $Result = Invoke-CimMethod -InputObject $BiosMethods -MethodName ('hpqBIOSInt' + $OutputSize) -Arguments @{InData = [CimInstance] $BiosDataIn}
 
     # If operation completed succesfully
-    if($Result.OutData.rwReturnCode -eq 0) {
+    If($Result.OutData.rwReturnCode -eq 0) {
 
         # Show output data if available
-        if($OutputSize -ne '0') {
+        If($OutputSize -ne '0') {
             Write-Information $('+ OK: ' + $(($Result.OutData.Data | Format-Hex | Select-Object -Expand Bytes | ForEach-Object { '{0:x2}' -f $_ }) -Join ''))
 
         # Or just show confirmation if no data
-        } else {
+        } Else {
             Write-Information '+ OK'
         }
 
     # If an error occured
-    } else {
+    } Else {
         Write-Information $('- Failed: Error ' + $Result.OutData.rwReturnCode + $(switch($Result.OutData.rwReturnCode) {
 
             # Provide a description for known error codes
@@ -84,6 +84,108 @@ Function Send-OmenBiosWmi {
             0x05 { ' - Input or Output Size Too Small' }
         } ))
     }
+}
+
+# Set-DisplayRefreshRate()
+# Changes the display refresh rate: used to overcome
+# screen stuttering when setting dGPU exclusive mode
+function Set-DisplayRefreshRate {
+    param ([Parameter(Mandatory = $True)] [Int] $Frequency)
+
+    # Actual function is contained in a C# code snippet
+    $CSharpSnippet = @"
+        using System;
+        using System.Runtime.InteropServices;
+
+        namespace CSharp {
+
+            // Structure needs to be defined first
+            [StructLayout(LayoutKind.Sequential)]
+            public struct DEVMODE {
+
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+                public string dmDeviceName;
+                public short dmSpecVersion;
+                public short dmDriverVersion;
+                public short dmSize;
+                public short dmDriverExtra;
+                public int dmFields;
+                public short dmOrientation;
+                public short dmPaperSize;
+                public short dmPaperLength;
+                public short dmPaperWidth;
+                public short dmScale;
+                public short dmCopies;
+                public short dmDefaultSource;
+                public short dmPrintQuality;
+                public short dmColor;
+                public short dmDuplex;
+                public short dmYResolution;
+                public short dmTTOption;
+                public short dmCollate;
+
+                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+                public string dmFormName;
+                public short dmLogPixels;
+                public short dmBitsPerPel;
+                public int dmPelsWidth;
+                public int dmPelsHeight;
+                public int dmDisplayFlags;
+                public int dmDisplayFrequency;
+                public int dmICMMethod;
+                public int dmICMIntent;
+                public int dmMediaType;
+                public int dmDitherType;
+                public int dmReserved1;
+                public int dmReserved2;
+                public int dmPanningWidth;
+                public int dmPanningHeight;
+
+            }
+
+            // Import display settings functions
+            class User32 {
+
+                [DllImport("user32.dll")]
+                public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+
+                [DllImport("user32.dll")]
+                public static extern int ChangeDisplaySettings(ref DEVMODE devMode, int flags);
+
+                public const int CDS_TEST = 0x02;
+                public const int CDS_UPDATEREGISTRY = 0x01;
+                public const int DISP_CHANGE_FAILED = -1;
+                public const int ENUM_CURRENT_SETTINGS = -1;
+
+            }
+
+            // Actual code
+            public class Snippet {
+                static public void SetRefreshRate(int Frequency) {
+
+                    DEVMODE d = new DEVMODE();
+
+                    d.dmDeviceName = new string(new char[32]);
+                    d.dmFormName = new string(new char[32]);
+                    d.dmSize = (short) Marshal.SizeOf(d);
+
+                    User32.EnumDisplaySettings(null, User32.ENUM_CURRENT_SETTINGS, ref d);
+
+                    d.dmDisplayFrequency = Frequency;
+
+                    // Check if change can be performed first, only then proceed
+                    if(User32.ChangeDisplaySettings(ref d, User32.CDS_TEST) != User32.DISP_CHANGE_FAILED)
+                        User32.ChangeDisplaySettings(ref d, User32.CDS_UPDATEREGISTRY);
+
+                }
+
+            }
+
+        }
+"@
+
+    Add-Type $CSharpSnippet
+    [CSharp.Snippet]::SetRefreshRate($Frequency)
 }
 
 # Iterate through arguments and perform operations accordingly
@@ -272,6 +374,65 @@ ForEach($Arg in $Args) {
             # Byte #2: 0x01 - DState
             # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off
         }
+        '-MuxFix' {
+            Write-Information 'Advanced Optimus Screen Stutter Fix'
+            Set-Variable -Name OperationAttempted -Scope Global -Value $True
+            $MuxState = $(Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\nvlddmkm\Global\NvHybrid\Persistence\ACE' -Name 'InternalMuxState')
+            If($MuxState -ne 2) {
+                Write-Information '- Only Applicable in Discrete GPU Mode'
+            }
+            Else {
+                $CurrentRefreshRate = $(Get-CimInstance -CimSession $Session `
+                    -Query 'SELECT CurrentRefreshRate FROM Win32_VideoController WHERE PNPDeviceID LIKE "%VEN_10DE%"' `
+                    | Select-Object -ExpandProperty 'CurrentRefreshRate')
+
+                # Set display refresh rate to the base rate,
+                # and then to the original refresh rate
+                Set-DisplayRefreshRate -Frequency 60
+                Set-DisplayRefreshRate -Frequency $CurrentRefreshRate
+                
+                # Reapply Windows color calibration settings
+                # COM {B210D694-C8DF-490D-9576-9E20CDBC20BD}
+                Start-ScheduledTask -TaskName 'Microsoft\Windows\WindowsColorSystem\Calibration Loader'
+
+                Write-Information '+ OK'
+            }
+        }
+        '-MuxFixOff' {
+            Write-Information 'Set Advanced Optimus Screen Stutter Fix Off'
+            Set-Variable -Name OperationAttempted -Scope Global -Value $True
+            Get-CimInstance -CimSession $Session -ClassName '__EventFilter' -Namespace 'root\subscription' `
+                -Filter "Name='OmenMuxFilter'" | Remove-CimInstance
+            Get-CimInstance -CimSession $Session -ClassName 'CommandLineEventConsumer' -Namespace 'root\subscription' `
+                -Filter "Name='OmenMuxConsumer'" | Remove-CimInstance
+            Get-CimInstance -CimSession $Session -ClassName '__FilterToConsumerBinding' -Namespace 'root\subscription' `
+                -Filter "Filter = ""__EventFilter.Name='OmenMuxFilter'""" | Remove-CimInstance
+        }
+        '-MuxFixOn' {
+            Write-Information 'Set Advanced Optimus Screen Stutter Fix On'
+            Set-Variable -Name OperationAttempted -Scope Global -Value $True
+            $OmenKeyConsumer = New-CimInstance -CimSession $Session -ClassName 'CommandLineEventConsumer' `
+                -Namespace 'root\subscription' -Property  @{`
+                    CommandLineTemplate = 'C:\Windows\System32\schtasks.exe /run /tn "Omen Mux"';
+                    ExecutablePath = 'C:\Windows\System32\schtasks.exe';
+                    Name = 'OmenMuxConsumer';
+                }
+            $OmenKeyFilter = New-CimInstance -CimSession $Session -ClassName '__EventFilter' `
+                -Namespace 'root\subscription' -Property @{`
+                    EventNameSpace = 'root\default';
+                    Name = 'OmenMuxFilter';
+                    Query = 'SELECT * FROM RegistryValueChangeEvent ' +
+                        'WHERE Hive = "HKEY_LOCAL_MACHINE" ' +
+                        'AND KeyPath = "SYSTEM\\CurrentControlSet\\Services\\nvlddmkm\\Global\\NvHybrid\\Persistence\\ACE" ' +
+                        'AND ValueName = "InternalMuxState"';
+                    QueryLanguage = 'WQL';
+                }
+            $OmenKeyBinding = New-CimInstance -CimSession $Session -ClassName '__FilterToConsumerBinding' `
+                    -Namespace 'root\subscription' -Property @{`
+                        Consumer = [Ref] $OmenKeyConsumer
+                        Filter = [Ref] $OmenKeyFilter;
+                }
+        }
         '-OmenKeyOff' {
             Write-Information 'Set Omen Key Off'
             Set-Variable -Name OperationAttempted -Scope Global -Value $True
@@ -416,7 +577,7 @@ ForEach($Arg in $Args) {
 Remove-CimSession -CimSession $Session
 
 # If not a single operation was attempted, display usage prompt
-if(!$OperationAttempted) {
+If(!$OperationAttempted) {
     Write-Host 'Omen Hardware Control Script - Version' $MyVersion
     Write-Host 'Usage:' $MyInvocation.MyCommand.Name`r`n `
 ' [-GetBornOnDate] [-GetOcSupport] [-GetSmartAdapterStatus] [-GetSysDesignData]'`r`n `
@@ -428,5 +589,5 @@ if(!$OperationAttempted) {
 ' [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]'`r`n `
 ' [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <0x00-0xFF>] [-SetFanTable <00-FF>+ (# < 128)]'`r`n `
 ' [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]'`r`n `
-' [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]'
+' [-MuxFix] [-MuxFixOff|-MuxFixOn] [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]'
 }
