@@ -44,9 +44,9 @@ OmenHwCtl
  [-GetBiosUndervoltSupport] [-GetMemOcSupport] [-SetMemXmp] [-OmenKeyOff|-OmenKeyOn]
  [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]
  [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]
- [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <00-FF>] [-SetFanTable <00-FF>+ (# < 128)]
+ [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <0x00-0xFF>] [-SetFanTable <00-FF>+ (# < 128)]
  [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]
- [-SetLedAnim] [-Silent]
+ [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]
 ````
 
 ![OmenHwCtl Screenshot (from an older version)](https://raw.githubusercontent.com/GeographicCone/OmenHwCtl/master/OmenHwCtl.png)
@@ -69,20 +69,22 @@ Where the parameters are:
 * `-GetMaxFanStatus` Check if fans are operating in maximum-speed mode
 * `-GetMemOcSupport` Check memory overclocking support
 * `-GetOcSupport` Check for overclocking support as reported by the BIOS
-* `-GetSmartAdapterStatus` Check Smart Adapter status
+* `-GetSmartAdapterStatus` Check Smart Adapter status ([reference](https://github.com/GeographicCone/OmenHwCtl/blob/master/Reference/Data%20Common.cs#L104-L108))
 * `-GetSysDesignData` Retrieve system design data, including Thermal Policy Version and default PL4
 * `-GetTemp` Show current temperature sensor reading
 * `-GetThermalThrottlingStatus` Check if system is currently thermal throttling
 * `-MaxFanSpeedOff` and `-MaxFanSpeedOn` Disable or enable maximum fan speed mode
 * `-MaxGpuPower` and `-MinGpuPower` Adjust Total Graphics Power (TGP) by enabling or disabling custom TGP (cTGP) and PPAB
-* `-OmenKeyOff` and `-OmenKeyOn` Run a custom task whenever the Omen Key is pressed
+* `-OmenKeyOff` Remove the WMI event filter triggering a task whenever the Omen Key is pressed
+* `-OmenKeyOn` Run a custom task whenever the Omen Key is pressed (see [Omen Key Task.cmd](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Key%20Task.cmd) and [.xml](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Key%20Task.xml))
 * `-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)` Set backlight color for a 4-zone keyboard
 * `-SetConcurrentCpuPower <0-254>` Set CPU Power Limit in a concurrent usage scenario to a specified value
 * `-SetCpuPower <0-254>` Set CPU Power Limit (PL1) to a specified value
 * `-SetCpuPowerMax <0-254>` Set maximum CPU Power Limit (PL1) to a specified value
-* `-SetFanLevel <00-FF:00-FF>` Manually set the speed of each fan (fan mode-dependent)
-* `-SetFanMode <00-FF>` Change fan operating mode
+* `-SetFanLevel <00-FF:00-FF>` Manually set the speed of each fan ([reference](https://github.com/GeographicCone/OmenHwCtl/blob/master/Reference/Data%20Platform.cs#L90-L93))
+* `-SetFanMode <0x00-0xFF>` Change fan operating mode ([reference](https://github.com/GeographicCone/OmenHwCtl/blob/master/Reference/Data%20Common.cs#L209-L223))
 * `-SetFanTable <00-FF>+ (# < 128)` Set the dynamic fan table (fan mode-dependent)
+* `-SetGfxMode <0x00-0xFF>` Change discrete graphics mode ([reference](https://github.com/GeographicCone/OmenHwCtl/blob/master/Reference/Data%20Common.cs#L258-L260))
 * `-SetIdleOff` `-SetIdleOn` Disable or enable idle mode
 * `-SetLedAnim` Set LED animation table, reserved but not implemented
 * `-SetMemXmp` Set memory to XMP mode (following reboot)
