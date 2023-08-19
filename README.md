@@ -1,6 +1,6 @@
 # OmenHwCtl: HP Omen Hardware Control
 
-Version: 2023-08-18
+Version: 2023-08-19
 
 ## What It Does
 
@@ -43,7 +43,7 @@ OmenHwCtl
  [-GetBacklight] [-GetBacklightSupport] [-GetColorTable] [-GetKbdType] [-GetLedAnim]
  [-GetBiosUndervoltSupport] [-GetMemOcSupport] [-SetMemXmp] [-OmenKeyOff|-OmenKeyOn]
  [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]
- [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]
+ [-MaxGpuPower|-MedGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]
  [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <0x00-0xFF>] [-SetFanTable <00-FF>+ (# < 128)]
  [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]
  [-MuxFix] [-MuxFixOff|-MuxFixOn] [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]
@@ -74,7 +74,7 @@ Where the parameters are:
 * `-GetTemp` Show current temperature sensor reading
 * `-GetThermalThrottlingStatus` Check if system is currently thermal throttling
 * `-MaxFanSpeedOff` and `-MaxFanSpeedOn` Disable or enable maximum fan speed mode
-* `-MaxGpuPower` and `-MinGpuPower` Adjust Total Graphics Power (TGP) by enabling or disabling custom TGP (cTGP) and PPAB
+* `-MaxGpuPower`, `-MedGpuPower` and `-MinGpuPower` Adjust Total Graphics Power (TGP) by enabling or disabling custom TGP (cTGP) and PPAB
 * `-MuxFix` Apply a fix for screen stutter and color profile not applied in Advanced Optimus discrete GPU-only mode (generally supposed to be run from the task)
 * `-MuxFixOff` Remove the WMI event filter to apply Advanced Optimus fix whenever discrete GPU-only mode is set
 * `-MuxFixOn` Set a task to run whenever DGPU-only mode is enabled to fix screen stuttering and color profile not being applied (see [Omen Mux Task.cmd](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Mux%20Task.cmd) and [.xml](https://github.com/GeographicCone/OmenHwCtl/blob/master/Omen%20Mux%20Task.xml))
