@@ -7,7 +7,7 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-18'
+$MyVersion = '2023-08-19'
 
 # Start a CIM session
 $Session = New-CimSession -Name 'hpq' -SkipTestConnection
@@ -359,15 +359,25 @@ ForEach($Arg in $Args) {
             # Byte #0: 0x01 - Maximum Fan Speed On
         }
         '-MaxGpuPower' {
-            Write-Information 'Set Maximum GPU Power'
+            Write-Information 'Set Maximum GPU Power (cTGP & PPAB)'
             Send-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x01, 0x01, 0x00)
             # Byte #0: 0x01 - Custom TGP On
             # Byte #1: 0x01 - PPAB On
             # Byte #2: 0x01 - DState
             # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off (0x4B - 75°C, 0x57 - 87°C)
         }
+        '-MedGpuPower' {
+            Write-Information 'Set Medium GPU Power (cTGP w/o PPAB)'
+            # For some reason this appears to need to run twice if switching PPAB off
+            Send-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x00, 0x01, 0x00)
+            Send-OmenBiosWmi -CommandType 0x22 -Data @(0x01, 0x00, 0x01, 0x00)
+            # Byte #0: 0x01 - Custom TGP On
+            # Byte #1: 0x00 - PPAB Off
+            # Byte #2: 0x01 - DState
+            # Byte #3: 0x00 - GPU Peak Temperature Sensor Threshold Off
+        }
         '-MinGpuPower' {
-            Write-Information 'Set Minimum GPU Power'
+            Write-Information 'Set Minimum GPU Power (Base TGP Only)'
             Send-OmenBiosWmi -CommandType 0x22 -Data @(0x00, 0x00, 0x01, 0x00)
             # Byte #0: 0x00 - Custom TGP Off
             # Byte #1: 0x00 - PPAB Off
@@ -386,15 +396,33 @@ ForEach($Arg in $Args) {
                     -Query 'SELECT CurrentRefreshRate FROM Win32_VideoController WHERE PNPDeviceID LIKE "%VEN_10DE%"' `
                     | Select-Object -ExpandProperty 'CurrentRefreshRate')
 
-                # Set display refresh rate to the base rate,
-                # and then to the original refresh rate
-                Set-DisplayRefreshRate -Frequency 60
-                Set-DisplayRefreshRate -Frequency $CurrentRefreshRate
-                
                 # Reapply Windows color calibration settings
                 # COM {B210D694-C8DF-490D-9576-9E20CDBC20BD}
                 Start-ScheduledTask -TaskName 'Microsoft\Windows\WindowsColorSystem\Calibration Loader'
 
+                # Screen stutter fix involves resetting the display refresh rate
+                # but it does not always work consistently, sometimes the mode
+                # has to be switched twice, i.e. Optimus → nVidia → Optimus → nVidia
+                # at which point it continues to work until the next reboot
+
+                # Resetting the refresh rate more than once does not make it consistent
+
+                #Set-DisplayRefreshRate -Frequency 60
+                Set-DisplayRefreshRate -Frequency $CurrentRefreshRate
+
+                # As ridiculous as it is, a better yet workaround seems to be opening 
+                # the Start Menu 10+ times: the first 1-2 times the animation is smooth,
+                # then it becomes jerky, only to eventually fix itself again permanently
+
+                $Shell = New-Object -ComObject WScript.Shell;
+
+                1..20 | % { 
+                    $Shell.SendKeys('^{ESC}')
+                    Start-Sleep -Milliseconds 350
+                    $Shell.SendKeys('^{ESC}')
+                }
+
+                # This issue needs further observation and a better fix or workaround
                 Write-Information '+ OK'
             }
         }
@@ -524,7 +552,8 @@ ForEach($Arg in $Args) {
             Write-Information $('Set Fan Mode to: ' + $Value)
             Send-OmenBiosWmi -CommandType 0x1A -Data @(0xFF, $Value)
             # Byte #0: 0xFF - Constant (?)
-            # Byte #1: Default/Eco → L2, Cool → L4, Performance → L7
+            # Byte #1: Default/Eco → L2 (0x30), Cool → L4 (0x50), Performance → L7 (0x31)
+            # All fan modes as defined in HP.Omen.Core.Common.PowerControl.PerformanceMode:
             # 0x00 - Default/Eco, 0x01 - Performance, 0x02 - Cool, 0x03 - Quiet, 0x04 - Extreme (L8)
             # 0x10 - L0, 0x20 - L1, 0x30 - L2, 0x40 - L3, 0x50 - L4, 0x11 - L5, 0x21 - L6, 0x31 - L7
         }
@@ -586,7 +615,7 @@ If(!$OperationAttempted) {
 ' [-GetBacklight] [-GetBacklightSupport] [-GetColorTable] [-GetKbdType] [-GetLedAnim]'`r`n `
 ' [-GetBiosUndervoltSupport] [-GetMemOcSupport] [-SetMemXmp] [-OmenKeyOff|-OmenKeyOn]'`r`n `
 ' [-BacklightOff|-BacklightOn] [-SetColor4 <RGB0:RGB1:RGB2:RGB3> (RGB#: 000000-FFFFFF)]'`r`n `
-' [-MaxGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]'`r`n `
+' [-MaxGpuPower|-MedGpuPower|-MinGpuPower] [-MaxFanSpeedOff|-MaxFanSpeedOn] [-SetIdleOff|-SetIdleOn]'`r`n `
 ' [-SetFanLevel <00-FF:00-FF>] [-SetFanMode <0x00-0xFF>] [-SetFanTable <00-FF>+ (# < 128)]'`r`n `
 ' [-SetConcurrentCpuPower <0-254>] [-SetCpuPower <0-254>] [-SetCpuPowerMax <0-254>]'`r`n `
 ' [-MuxFix] [-MuxFixOff|-MuxFixOn] [-SetGfxMode <0x00-0xFF>] [-SetLedAnim] [-Silent]'
