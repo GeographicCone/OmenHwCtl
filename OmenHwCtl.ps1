@@ -7,7 +7,7 @@
 param ([Switch] $Silent = $False)
 If(!$Silent) { $InformationPreference = 'Continue' }
 
-$MyVersion = '2023-08-19'
+$MyVersion = '2023-08-22'
 
 # Start a CIM session
 $Session = New-CimSession -Name 'hpq' -SkipTestConnection
@@ -84,108 +84,6 @@ Function Send-OmenBiosWmi {
             0x05 { ' - Input or Output Size Too Small' }
         } ))
     }
-}
-
-# Set-DisplayRefreshRate()
-# Changes the display refresh rate: used to overcome
-# screen stuttering when setting dGPU exclusive mode
-function Set-DisplayRefreshRate {
-    param ([Parameter(Mandatory = $True)] [Int] $Frequency)
-
-    # Actual function is contained in a C# code snippet
-    $CSharpSnippet = @"
-        using System;
-        using System.Runtime.InteropServices;
-
-        namespace CSharp {
-
-            // Structure needs to be defined first
-            [StructLayout(LayoutKind.Sequential)]
-            public struct DEVMODE {
-
-                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-                public string dmDeviceName;
-                public short dmSpecVersion;
-                public short dmDriverVersion;
-                public short dmSize;
-                public short dmDriverExtra;
-                public int dmFields;
-                public short dmOrientation;
-                public short dmPaperSize;
-                public short dmPaperLength;
-                public short dmPaperWidth;
-                public short dmScale;
-                public short dmCopies;
-                public short dmDefaultSource;
-                public short dmPrintQuality;
-                public short dmColor;
-                public short dmDuplex;
-                public short dmYResolution;
-                public short dmTTOption;
-                public short dmCollate;
-
-                [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-                public string dmFormName;
-                public short dmLogPixels;
-                public short dmBitsPerPel;
-                public int dmPelsWidth;
-                public int dmPelsHeight;
-                public int dmDisplayFlags;
-                public int dmDisplayFrequency;
-                public int dmICMMethod;
-                public int dmICMIntent;
-                public int dmMediaType;
-                public int dmDitherType;
-                public int dmReserved1;
-                public int dmReserved2;
-                public int dmPanningWidth;
-                public int dmPanningHeight;
-
-            }
-
-            // Import display settings functions
-            class User32 {
-
-                [DllImport("user32.dll")]
-                public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
-
-                [DllImport("user32.dll")]
-                public static extern int ChangeDisplaySettings(ref DEVMODE devMode, int flags);
-
-                public const int CDS_TEST = 0x02;
-                public const int CDS_UPDATEREGISTRY = 0x01;
-                public const int DISP_CHANGE_FAILED = -1;
-                public const int ENUM_CURRENT_SETTINGS = -1;
-
-            }
-
-            // Actual code
-            public class Snippet {
-                static public void SetRefreshRate(int Frequency) {
-
-                    DEVMODE d = new DEVMODE();
-
-                    d.dmDeviceName = new string(new char[32]);
-                    d.dmFormName = new string(new char[32]);
-                    d.dmSize = (short) Marshal.SizeOf(d);
-
-                    User32.EnumDisplaySettings(null, User32.ENUM_CURRENT_SETTINGS, ref d);
-
-                    d.dmDisplayFrequency = Frequency;
-
-                    // Check if change can be performed first, only then proceed
-                    if(User32.ChangeDisplaySettings(ref d, User32.CDS_TEST) != User32.DISP_CHANGE_FAILED)
-                        User32.ChangeDisplaySettings(ref d, User32.CDS_UPDATEREGISTRY);
-
-                }
-
-            }
-
-        }
-"@
-
-    Add-Type $CSharpSnippet
-    [CSharp.Snippet]::SetRefreshRate($Frequency)
 }
 
 # Iterate through arguments and perform operations accordingly
@@ -388,41 +286,44 @@ ForEach($Arg in $Args) {
             Write-Information 'Advanced Optimus Screen Stutter Fix'
             Set-Variable -Name OperationAttempted -Scope Global -Value $True
             $MuxState = $(Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\nvlddmkm\Global\NvHybrid\Persistence\ACE' -Name 'InternalMuxState')
+            $TempFile = $Env:TEMP + '\OmenHwCtl_MuxFixApplied.txt'
             If($MuxState -ne 2) {
                 Write-Information '- Only Applicable in Discrete GPU Mode'
             }
+            ElseIf(Test-Path $TempFile) {
+                Write-Information '- Fix Already Applied to Current Session'
+            }
             Else {
-                $CurrentRefreshRate = $(Get-CimInstance -CimSession $Session `
-                    -Query 'SELECT CurrentRefreshRate FROM Win32_VideoController WHERE PNPDeviceID LIKE "%VEN_10DE%"' `
-                    | Select-Object -ExpandProperty 'CurrentRefreshRate')
-
-                # Reapply Windows color calibration settings
-                # COM {B210D694-C8DF-490D-9576-9E20CDBC20BD}
+                # Reapply Windows color calibration settings, equivalent
+                # to calling COM {B210D694-C8DF-490D-9576-9E20CDBC20BD}
                 Start-ScheduledTask -TaskName 'Microsoft\Windows\WindowsColorSystem\Calibration Loader'
 
-                # Screen stutter fix involves resetting the display refresh rate
-                # but it does not always work consistently, sometimes the mode
-                # has to be switched twice, i.e. Optimus → nVidia → Optimus → nVidia
-                # at which point it continues to work until the next reboot
+                # Fix screen stutter by restarting the shell 
+                $Shell = $(Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon' -Name 'Shell')
+                Stop-Process -Force -Name $($Shell | %{ [IO.FileInfo] $_ | % Basename })
+                Start-Process $Shell
 
-                # Resetting the refresh rate more than once does not make it consistent
+                # Save state so that the fix is not reapplied
+                New-Item -Path $TempFile
 
-                #Set-DisplayRefreshRate -Frequency 60
-                Set-DisplayRefreshRate -Frequency $CurrentRefreshRate
+                # Clear the saved state upon the next reboot
+                $ErrorActionPreference = 'SilentlyContinue'
+                New-ItemProperty -Force `
+                    -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager' `
+                    -Name 'PendingFileRenameOperations' `
+                    -Type MultiString `
+                    -Value $( `
+                        $(Get-ItemPropertyValue `
+                            -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager' `
+                            -Name 'PendingFileRenameOperations') `
+                        + '\??\' + $TempFile + "`0`0")
 
-                # As ridiculous as it is, a better yet workaround seems to be opening 
-                # the Start Menu 10+ times: the first 1-2 times the animation is smooth,
-                # then it becomes jerky, only to eventually fix itself again permanently
-
-                $Shell = New-Object -ComObject WScript.Shell;
-
-                1..20 | % { 
-                    $Shell.SendKeys('^{ESC}')
-                    Start-Sleep -Milliseconds 350
-                    $Shell.SendKeys('^{ESC}')
-                }
+                # Temporarily changed error action preference to overcome a long-standing
+                # bug in PowerShell 5.1: https://github.com/PowerShell/PowerShell/issues/5906
+                $ErrorActionPreference = 'Continue'
 
                 # This issue needs further observation and a better fix or workaround
+                # but for now this seems to do the trick
                 Write-Information '+ OK'
             }
         }
