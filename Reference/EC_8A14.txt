@@ -1,0 +1,136 @@
+HP Omen 16 (2022) 8A14
+Embedded Controller Register Table
+2022-08-24
+
+# Identified
+
+Off   Len             Description [Unit]         RW  Value Range
+0x2C  (1)  -          L Fan Set Speed [%]        RW  0x00 ... 0x64 [0% ... 100%] / 0xFF [Auto]
+0x2D  (1)  -          R Fan Set Speed [%]        RW  0x00 ... 0x64 [0% ... 100%] / 0xFF [Auto]
+0x2E  (1)  -          L Fan Get Speed [%]        R.  0x00 ... 0x64 [0% ... 100%]
+0x2F  (1)  -          R Fan Get Speed [%]        R.  0x00 ... 0x64 [0% ... 100%]
+0x34  (1)  SRP1       L Fan Set Speed [krpm]     RW  0x00 [Off] / 0x15 ... 0x37 [2,100 ... 5,500 rpm] / 0xFF [Auto]
+0x35  (1)  SRP2       R Fan Set Speed [krpm]     RW  0x00 [Off] / 0x15 ... 0x39 [2,100 ... 5,700 rpm] / 0xFF [Auto]
+0x47  (1)  TNT2       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x48  (1)  TNT3       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x49  (1)  TNT4       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x4A  (1)  IRSN       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x4B  (1)  TNT5       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x57  (1)  CPUT       Temperature: CPU [°C]      R.  0x00 ... 0x64 [0°C ... 100°C]
+0x58  (1)  RTMP       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x59  (1)  TMP1       Temperature [°C]           R.  0x00 ... 0x64 [0°C ... 100°C]
+0x5F  (1)  -          HID Disable Toggle         RW  0x00 [All On] / 0x08 [TouchPad Off] / 0x10 [Win Key Off] / 0x18 [Both Off]
+0x62  (1)  OMCC       Manual Fan Control         RW  0x00 [Off / Auto] / 0x06 [On / Manual] / DSDT: Bit #0: OMCC [#1234567 -]
+0x63  (1)  -          Manual Auto Countdown [s]  R.  0x78 ... 0x00 [120s ... 0s]
+           -                                     .W  0x00 [Permanent Manual Mode]
+0x95  (1)  HPCM       Performance Mode           RW  0x30 [L2 / Default] / 0x31 [L7 / Performance] / 0x50 [L4 / Cool]
+0x96  (1)  -          Battery Charge Level [%]   R.  0x00 ... 0x64 [0% ... 100%]
+0xA0  (1)  QBHK       Last Hotkey                R.  0x?? [State Changes with Fn Key Combinations Pressed]
+0xA2  (1)  QBBB       HID-Related (?)            R.  0x40 .. 0x43 [State Related to 0x5F HID Disable Toggle]
+0xB0  (2)  RPM1 RPM2  L Fan Get Speed [rpm]      R.  0x0000 ... 0x158A [0 ... ~ 5,500 rpm]
+0xB2  (2)  RPM3 RPM4  R Fan Get Speed [rpm]      R.  0x0000 ... 0x1648 [0 ... ~ 5,700 rpm]
+0xB7  (1)  GPTM       Temperature: GPU [°C]      R.  0x00 ... 0x64 [0°C ... 100°C]
+0xBA  (1)  CLOW       Minimum Power State        RW  0x00 .. 0x05 [Highest TDP ... Lowest TDP]
+0xBB  (1)  CMAX       Maximum Power State        RW  0x00 .. 0x05 [Highest TDP ... Lowest TDP]
+0xEC  (1)  FFFF FFFS  Max Fan Speed Toggle       RW  0x00 [Off / Regular Speed] / 0x0C [On / Max Speed]
+0xF4  (1)  SFAN       Fan Toggle                 RW  0x00 [Fans On] / 0x02 [Fans Off]
+0xF9  (1)  GFXM FTHM  Thermal Threshold Reached  RW  Bit #4: GFXM, Bit #7: FTHM [#012356 -]
+
+# DSDT Record
+
+0x00  (1)  SMPR
+0x01  (1)  SMST
+0x02  (1)  SMAD
+0x03  (1)  SMCM
+0x04 (32)  SMD0
+0x24  (1)  BCNT
+0x25  (1)  SMAA
+0x30  (2)  BTPL/BTPH
+0x32  (1)  BCLC
+0x33  (1)  -
+0x36  (1)  -
+0x37  (1)  ECL1
+0x38  (1)  ECL2
+0x39  (1)  ECL4
+0x3A  (1)  EL1R
+0x3B  (1)  EL2R
+0x3C  (1)  EL4R
+0x40  (1)  Bit #0: SW2S, #3: ACCC, #4: TRPM [#12567 -]
+0x41  (1)  Bit #0: W7OS, #1: QWOS, #3: SUSE, #4: RFLG [#2567 -]
+0x42  (1)  Bit #1: CALS, #4: KBBL [#023567 -]
+0x43  (1)  Bit #2: ACPS, #3: ACKY, #4: GFXT [#01567 -]
+0x44  (1)  Bit #7: DSMB [#0123456 -]
+0x4C  (1)  STRM
+0x4D  (1)  -
+0x4E  (1)  Bit #0: LIDE [#1234567 -]
+0x4F  (1)  -
+0x50  (1)  Bit #2 PTHM, #4: S3CA, #5: DPTL, #6: IHEF [#013 -]
+0x52  (1)  Bit #0: ECLS [#1234567 -]
+0x53  (1)  Bit #0: CPHK [#1234567 -]
+0x55  (1)  EC45
+0x56  (1)  -
+0x5A  (1)  -
+0x5B  (1)  HPTC
+0x61  (1)  SHPM
+0x67  (1)  Bit #0: LDBG, #2: GC6R, #3: IGC6 [#14567 -]
+0x68  (1)  Bit #3: PLGS [#0124567 -]
+0x69  (1)  Bit #4: BCTF, Bit #5: BMNF, #6: BTVD, #7: BF10 [#0123 -]
+0x6C  (1)  GWKR
+0x70  (2)  BADC
+0x72  (2)  BFCC
+0x74  (1)  BVLB
+0x75  (1)  BVHB
+0x76  (1)  BDVO
+0x7F  (1)  ECTB
+0x82  (1)  MBST
+0x83  (2)  MCUR
+0x85  (2)  MBRM
+0x87  (2)  MBCV
+0x89  (1)  GPUT [GPU Temperature? Unused]
+0x8A  (1)  -
+0x8B  (1)  Bit #012: LEDM [#34567 -]
+0x8D  (1)  Bit #5: MBFC [#01234 -]
+0x90  (1)  NVDO
+0x91  (1)  ECDO
+0x94  (1)  Bit #0: GSSU, #1: GSMS [#234567 -]
+0xA1  (1)  -
+0xA3  (1)  Bit #0123: ADPI, Bit #4567: ADPH
+0xA4  (1)  Bit #0: MBTS, Bit #7: BACR [#123456 -]
+0xA5  (1)  MBDC
+0xA6  (1)  -
+0xA7  (1)  Bit #0: ENWD, Bit #1: TMPR [#234567 -]
+0xAA  (1)  Bit #1: SMSZ, #2: SE1N, #3: SE2N, #4: SOIE, #7 RCDS [#056 -]
+0xAD  (1)  SADP
+0xB8  (1)  EPWM
+0xB9  (1)  -
+0xC1  (8)  DPPC
+0xC5  (1)  Bit #0: SHB1, #1: SHB2, #2: SHB3, #3: SHB4, #4: SHOK, #5: SHFL, #6: SHNP, #7: SHEN
+0xC6  (1)  Bit #1: CVTS [#0234567 -]
+0xCA  (1)  CSFG
+0xD0  (1)  Bit #0: EBPL [#1234567 -]
+0xD2  (1)  S1A1
+0xD3  (1)  S2A1
+0xD4  (1)  PSHD
+0xD5  (1)  PSLD
+0xD6  (1)  DBPL
+0xD7  (1)  STSP
+0xDA  (1)  PSIN
+0xDB  (1)  Bit #0: PSKB, Bit #1: PSTP, Bit #3: PWOL, Bit #4: RTCE [#2567 -]
+0xDC  (1)  S1A0
+0xDD  (1)  S2A0
+0xDE  (1)  NVDX
+0xDF  (1)  ECDX
+0xE0  (1)  DLYT
+0xE1  (1)  DLY2
+0xE2  (1)  KBT0
+0xE6  (1)  SFHK
+0xE9  (1)  DTMT
+0xEA  (1)  PL12
+0xEB  (1)  ETMT
+0xEC  (1)  Bit #1: FFFF, Bit #2: FFFS [#034567 -]
+0xF0  (1)  Bit #0: PARS, Bit #7: MUCR [#123456 -]
+0xF1  (1)  -
+0xF2  (1)  Bit #0: ZPDD, Bit #7: ENPA [#123456 -]
+0xF3  (1)  -
+0xF7  (1)  Bit #0: HDMI [#1234567 -]
+0xF8  (1)  Bit #0: NVDS [#1234567 -]
