@@ -1,3 +1,10 @@
+# Project Update: Introducing OmenMon
+<img alt="OmenMon" src="https://omenmon.github.io/pic/gui-overview.png" width="50%"/>
+
+_**OmenMon** is a successor to **OmenHwCtl**. As a C# compiled application, it runs much faster, providing 100% of **OmenHwCtl**'s functionality plus a lot more, including a GUI mode. Details at [omenmon.github.io](https://omenmon.github.io/) and [github.com/OmenMon](https://github.com/OmenMon)._
+
+_The original description of **OmenHwCtl** is retained below. **OmenHwCtl** can still be useful for experimentation if new BIOS calls are identified in the future but as far as general usage is concerned, **OmenMon** largely renders it obsolete._
+
 # OmenHwCtl: HP Omen Hardware Control
 
 Version: 2023-08-22
