@@ -1,6 +1,6 @@
 ; HP Omen 16 (2022) 8A14
 ; Embedded Controller Register Table
-; Updated 2022-08-24
+; Updated 2023-11-10
 
 ; For use with Read & Write-Everything:
 ; http://rweverything.com/
@@ -45,16 +45,16 @@ Name=HP Omen EC Table
 23=SMD0 (32 of 32)
 24=BCNT (1)
 25=SMAA (1)
-2C=- (1) Read & Write\rL Fan Set Speed [%]\r0x00 ... 0x64 [0% ... 100%] /\r0xFF [Auto]
-2D=- (1) Read & Write\rR Fan Set Speed [%]\r0x00 ... 0x64 [0% ... 100%] /\r0xFF [Auto]
-2E=- (1) Read Only\rL Fan Get Speed [%]\r0x00 ... 0x64 [0% ... 100%]
-2F=- (1) Read Only\rR Fan Get Speed [%]\r0x00 ... 0x64 [0% ... 100%]
+2C=- (1) Read & Write\rCPU Fan Set Speed [%]\r0x00 ... 0x64 [0% ... 100%] /\r0xFF [Auto]
+2D=- (1) Read & Write\rGPU Fan Set Speed [%]\r0x00 ... 0x64 [0% ... 100%] /\r0xFF [Auto]
+2E=- (1) Read Only\rCPU Fan Get Speed [%]\r0x00 ... 0x64 [0% ... 100%]
+2F=- (1) Read Only\rGPU Fan Get Speed [%]\r0x00 ... 0x64 [0% ... 100%]
 30=BTPL (1 of 2)
 31=BTPH (2 of 2)
 32=BCLC (1)
 33=- (1)
-34=SRP1 (1) Read & Write\rL Fan Set Speed [krpm]\r0x00 [Off] /\r0x15 ... 0x37 [2,100 ... 5,500 rpm] /\r0xFF [Auto]
-35=SRP2 (1) Read & Write\rR Fan Set Speed [krpm]\r0x00 [Off] /\r0x15 ... 0x39 [2,100 ... 5,700 rpm] /\r0xFF [Auto]
+34=SRP1 (1) Read & Write\rCPU Fan Set Speed [krpm]\r0x00 [Off] /\r0x15 ... 0x37 [2,100 ... 5,500 rpm] /\r0xFF [Auto]
+35=SRP2 (1) Read & Write\rGPU Fan Set Speed [krpm]\r0x00 [Off] /\r0x15 ... 0x39 [2,100 ... 5,700 rpm] /\r0xFF [Auto]
 36=- (1)
 37=ECL1 (1)  
 38=ECL2 (1)  
@@ -88,7 +88,7 @@ Name=HP Omen EC Table
 5B=HPTC (1)
 5F=- (1) Read & Write\rHID Disable Toggle\r0x00 [All On] /\r0x08 [TouchPad Off] /\r0x10 [Win Key Off] /\r0x18 [Both Off]
 61=SHPM (1)
-62=OMCC (1) Read & Write\rManual Fan Control\r0x00 [Off / Auto]\r0x06 [On / Manual]\rDSDT: Bit #0: OMCC\r[Bit #1234567 Not in DSDT]
+62=OMCC (1) Read & Write\rManuaCPU Fan Control\r0x00 [Off / Auto]\r0x06 [On / Manual]\rDSDT: Bit #0: OMCC\r[Bit #1234567 Not in DSDT]
 63=- (1) Read & Write\r\rRead:\rManual Auto Countdown [s]\r0x78 ... 0x00 [120s ... 0s]\r\rWrite:\r0x00 [Permanent Manual Mode]
 67=(1)\rBit #0: LDBG\r#2: GC6R\r#3: IGC6\r[Bit #14567 Not in DSDT]
 68=(1)\rBit #3: PLGS\r[Bit #0124567 Not in DSDT]
@@ -128,10 +128,10 @@ A6=- (1)
 A7=(1)\rBit #0: ENWD\rBit #1: TMPR\r[Bit #234567 Not in DSDT]
 AA=(1)\rBit #1: SMSZ\r#2: SE1N\r#3: SE2N\r#4: SOIE\r#7 RCDS\r[Bit #056 Not in DSDT]
 AD=SADP (1)  
-B0=RPM1 RPM2 (1 of 2, Low) Read Only\rL Fan Get Speed [rpm]\r0x0000 ... 0x158A [0 ... ~ 5,500 rpm]
-B1=RPM1 RPM2 (2 of 2, High) Read Only\rL Fan Get Speed [rpm]\r0x0000 ... 0x158A [0 ... ~ 5,500 rpm]
-B2=RPM3 RPM4 (1 of 2, Low) Read Only\rR Fan Get Speed [rpm]\r0x0000 ... 0x1648 [0 ... ~ 5,700 rpm]
-B3=RPM3 RPM4 (2 of 2, High) Read Only\rR Fan Get Speed [rpm]\r0x0000 ... 0x1648 [0 ... ~ 5,700 rpm]
+B0=RPM1 RPM2 (1 of 2, Low) Read Only\rCPU Fan Get Speed [rpm]\r0x0000 ... 0x158A [0 ... ~ 5,500 rpm]
+B1=RPM1 RPM2 (2 of 2, High) Read Only\rCPU Fan Get Speed [rpm]\r0x0000 ... 0x158A [0 ... ~ 5,500 rpm]
+B2=RPM3 RPM4 (1 of 2, Low) Read Only\rGPU Fan Get Speed [rpm]\r0x0000 ... 0x1648 [0 ... ~ 5,700 rpm]
+B3=RPM3 RPM4 (2 of 2, High) Read Only\rGPU Fan Get Speed [rpm]\r0x0000 ... 0x1648 [0 ... ~ 5,700 rpm]
 B7=GPTM (1) Read Only\rTemperature: GPU [°C]\r0x00 ... 0x64 [0°C ... 100°C]
 B8=EPWM (1)
 B9=- (1)
